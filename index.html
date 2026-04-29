@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LVO Vanguard · Real Estate</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --red:    #8B0000; 
+      --red-hi: #CC2020;
+      --chrome: #C8C8D0;
+      --white:  #F0EEEC;
+      --dim:    #888880;
+      --bg:     #050505;
+      --accent: #C8A96E;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.8rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(5,5,5,0.96) 0%, transparent 100%);
+    }
+    .nav-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .nav-parent {
+      font-family: 'Cinzel', serif;
+      font-size: 0.48rem;
+      letter-spacing: 0.35em;
+      color: var(--red-hi);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-parent:hover { color: var(--chrome); }
+    .nav-mark {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .nav-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.25em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(600px, 90vw);
+      height: min(600px, 90vw);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.5em;
+      color: var(--red-hi);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+    }
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 8vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
+    }
+    .hero-sub {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.48rem, 1.5vw, 0.65rem);
+      letter-spacing: 0.4em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.7s forwards;
+    }
+    .hero-statement {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--white);
+      opacity: 0;
+      max-width: 600px;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.9s forwards;
+    }
+    .hero-rule {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+      margin: 3rem auto 0;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.4s forwards;
+    }
+
+    /* DIVIDER */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      margin: 5rem auto;
+      max-width: 900px;
+      width: 100%;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: linear-gradient(to right, transparent, var(--accent) 40%, transparent);
+    }
+    .section-divider span {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.4em;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* PILLARS */
+    .pillars {
+      padding: 0 2rem 6rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      border: 0.5px solid rgba(200,169,110,0.2);
+    }
+    .pillar {
+      padding: 3rem 2rem;
+      border-right: 0.5px solid rgba(200,169,110,0.12);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+    .pillar:last-child { border-right: none; }
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      transform: scaleX(0);
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .pillar:hover { background: rgba(200,169,110,0.03); }
+    .pillar:hover::before { transform: scaleX(1); }
+    .pillar-icon {
+      font-family: 'Cinzel', serif;
+      font-size: 0.5rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: block;
+      opacity: 0.7;
+    }
+    .pillar-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--chrome);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+    .pillar-text {
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--dim);
+      font-style: italic;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 0.5px solid rgba(200,169,110,0.15);
+      padding: 2.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+    .footer-back {
+      font-family: 'Cinzel', serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.3em;
+      color: var(--dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .footer-back:hover { color: var(--accent); }
+    .footer-copy {
+      font-family: 'Cinzel', serif;
+      font-size: 0.48rem;
+      letter-spacing: 0.15em;
+      color: rgba(136,136,128,0.35);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      nav { padding: 1.2rem 1.2rem; }
+      .nav-tag { display: none; }
+      .pillars { padding: 0 1.2rem 5rem; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .pillar { border-right: none; border-bottom: 0.5px solid rgba(200,169,110,0.12); }
+      .pillar:last-child { border-bottom: none; }
+      footer { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.2rem; }
+    }
+    @media (min-width: 601px) and (max-width: 900px) {
+      .pillars-grid { grid-template-columns: 1fr; }
+      .pillar { border-right: none; border-bottom: 0.5px solid rgba(200,169,110,0.12); }
+      .pillar:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <div class="nav-left">
+        <a class="nav-parent" href="https://wearelvo.com">← LVO Holdings</a>
+        <a class="nav-mark" href="#">LVO Vanguard</a>
+      </div>
+      <span class="nav-tag">Real Estate Division</span>
+    </nav>
+
+    <section class="hero">
+      <p class="hero-label">LVO Holdings · Division 01</p>
+      <h1 class="hero-title">Vanguard</h1>
+      <p class="hero-sub">Real Estate · Acquisition · Development</p>
+      <p class="hero-statement">
+        Every property is a position.<br/>
+        Every position is permanent.
+      </p>
+      <div class="hero-rule"></div>
+    </section>
+
+    <div class="section-divider reveal"><span>What We Do</span></div>
+
+    <section class="pillars">
+      <div class="pillars-grid">
+        <div class="pillar reveal">
+          <span class="pillar-icon">Acquisition</span>
+          <p class="pillar-title">Property Acquisition</p>
+          <p class="pillar-text">Strategic identification and acquisition of residential and commercial properties. We move on value, not emotion.</p>
+        </div>
+        <div class="pillar reveal" style="transition-delay:0.15s">
+          <span class="pillar-icon">Development</span>
+          <p class="pillar-title">Asset Development</p>
+          <p class="pillar-text">Converting underperforming assets into revenue-generating holdings. Every dollar deployed with purpose.</p>
+        </div>
+        <div class="pillar reveal" style="transition-delay:0.3s">
+          <span class="pillar-icon">Legacy</span>
+          <p class="pillar-title">Generational Holdings</p>
+          <p class="pillar-text">Properties held under the LVO Family Legacy Trust. Built to outlast us. Positioned to grow beyond us.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <a class="footer-back" href="https://wearelvo.com">← wearelvo.com</a>
+      <span class="footer-copy">&copy; 2026 LVO Holdings · All Rights Reserved</span>
+    </footer>
+  </div>
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => obs.observe(r));
+  </script>
+</body>
+</html>
