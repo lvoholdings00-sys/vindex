@@ -8,129 +8,141 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
+  <style>
+:root{--accent:#C8A96E}
+/* LVO Holdings — shared division-site stylesheet
+   Each page sets :root{--accent:#hex} and includes only its own content. */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#8B0000;--red-hi:#CC2020;
+  --chrome:#C8C8D0;--white:#F0EEEC;
+  --dim:#888880;--bg:#000000;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;cursor:default}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.8rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,5,.97),transparent)}
+.nav-left{display:flex;flex-direction:column;gap:.2rem}
+.nav-parent{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.35em;color:var(--red-hi);text-decoration:none;text-transform:uppercase;transition:color .3s}
+.nav-parent:hover{color:var(--chrome)}
+.nav-mark{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.3em;color:var(--accent);text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
+#navUserBtn{display:none;align-items:center;gap:1rem}
+#navUserBtn.show{display:flex}
+.nav-dash-link{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;color:var(--accent);text-decoration:none;text-transform:uppercase;border:.5px solid color-mix(in srgb,var(--accent) 35%,transparent);padding:.35rem .75rem;transition:background .25s,border-color .25s}
+.nav-dash-link:hover{background:color-mix(in srgb,var(--accent) 10%,transparent);border-color:var(--accent)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;position:relative}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,90vw);height:min(600px,90vw);border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 7%,transparent) 0%,transparent 70%)}
+.hero-label{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--red-hi);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .3s forwards}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;letter-spacing:.2em;color:var(--accent);line-height:1;margin-bottom:.5rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .5s forwards}
+.hero-sub{font-family:'Cinzel',serif;font-size:clamp(.48rem,1.5vw,.65rem);letter-spacing:.4em;color:var(--dim);text-transform:uppercase;margin-bottom:3rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .7s forwards}
+.hero-statement{font-size:clamp(1rem,3vw,1.5rem);font-weight:300;font-style:italic;line-height:1.8;color:var(--white);opacity:0;max-width:600px;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .9s forwards}
+.hero-rule{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);margin:3rem auto 0;opacity:0;animation:fadeIn 1s ease 1.4s forwards}
+
+/* DIVIDER */
+.section-divider{display:flex;align-items:center;gap:1.5rem;padding:0 2rem;margin:5rem auto;max-width:900px;width:100%}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:.5px;background:linear-gradient(to right,transparent,var(--accent) 40%,transparent)}
+.section-divider span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--accent);white-space:nowrap}
+
+/* PILLARS */
+.pillars{padding:0 2rem;max-width:1100px;margin:0 auto;width:100%}
+.pillars-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:.5px solid color-mix(in srgb,var(--accent) 20%,transparent)}
+.pillar{padding:3rem 2rem;border-right:.5px solid color-mix(in srgb,var(--accent) 12%,transparent);position:relative;overflow:hidden;transition:background .4s}
+.pillar:last-child{border-right:none}
+.pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.pillar:hover{background:color-mix(in srgb,var(--accent) 3%,transparent)}
+.pillar:hover::before{transform:scaleX(1)}
+.pillar-icon{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);margin-bottom:1.5rem;display:block;opacity:.7}
+.pillar-title{font-family:'Cinzel',serif;font-size:.88rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:1rem;text-transform:uppercase}
+.pillar-text{font-size:.92rem;font-weight:300;line-height:1.9;color:var(--dim);font-style:italic}
+
+/* TIERS */
+.tiers{max-width:800px;margin:0 auto;padding:0 2rem 7rem;width:100%}
+.tier{display:flex;align-items:flex-start;gap:2rem;padding:2.5rem 0;border-bottom:.5px solid color-mix(in srgb,var(--accent) 10%,transparent)}
+.tier:last-child{border-bottom:none}
+.tier-num{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);min-width:48px;padding-top:.2rem}
+.tier-title{font-family:'Cinzel',serif;font-size:.8rem;font-weight:600;letter-spacing:.2em;color:var(--chrome);margin-bottom:.6rem;text-transform:uppercase}
+.tier-text{font-size:.92rem;font-weight:300;font-style:italic;line-height:1.9;color:var(--dim)}
+
+/* NOTICE (licensing box, etc.) */
+.notice-wrap{max-width:700px;margin:0 auto;padding:0 2rem 6rem;width:100%}
+.notice-box{border:.5px solid color-mix(in srgb,var(--accent) 25%,transparent);padding:2.5rem;position:relative;text-align:center}
+.notice-box::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
+.notice-title{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:1.2rem}
+.notice-text{font-size:.92rem;font-weight:300;font-style:italic;line-height:1.9;color:var(--dim)}
+
+/* PORTAL */
+.portal-wrap{max-width:960px;margin:0 auto;padding:0 2rem 8rem;width:100%}
+#portalGate,#portalRedirect{border:.5px solid color-mix(in srgb,var(--accent) 25%,transparent);padding:4rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
+#portalGate::before,#portalRedirect::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
+#portalRedirect{display:none;padding:3.5rem 3rem}
+#portalRedirect.show{display:block}
+.gate-title,.redirect-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem}
+.gate-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2.5rem;line-height:1.7}
+#clerkSignIn{display:flex;justify-content:center;width:100%}
+#clerkSignIn>*{width:100% !important;max-width:100% !important}
+.redirect-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:.5rem}
+.redirect-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2rem;line-height:1.7}
+.redirect-btn{display:inline-block;background:transparent;border:.5px solid var(--accent);color:var(--accent);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.38em;padding:1rem 2rem;cursor:pointer;text-transform:uppercase;transition:background .25s,color .25s;text-decoration:none}
+.redirect-btn:hover{background:var(--accent);color:var(--bg)}
+.redirect-rule{width:1px;height:32px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--accent) 30%,transparent),transparent);margin:1.8rem auto 0}
+
+/* FOOTER */
+footer{border-top:.5px solid color-mix(in srgb,var(--accent) 15%,transparent);padding:2.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;margin-top:auto}
+.footer-back{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .3s}
+.footer-back:hover{color:var(--accent)}
+.footer-links{display:flex;align-items:center;gap:.9rem;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase}
+.footer-links a{color:var(--dim);text-decoration:none;transition:color .3s}
+.footer-links a:hover{color:var(--accent)}
+.footer-links span{color:color-mix(in srgb,var(--dim) 40%,transparent)}
+.footer-copy{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.15em;color:color-mix(in srgb,var(--dim) 35%,transparent)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Scramble text */
+.scramble-word{display:inline-block;white-space:nowrap}
+.scramble-char{display:inline-block;will-change:contents}
+
+/* Clerk input override */
+.cl-formFieldInput,[data-clerk-input],input.cl-formFieldInput{font-family:'Cormorant Garamond',Georgia,serif !important;font-size:1rem !important;letter-spacing:.04em !important;text-transform:none !important;font-variant:normal !important}
+
+@media(max-width:600px){
+  nav{padding:1.2rem}
+  .nav-tag{display:none}
+  .pillars{padding:0 1.2rem}
+  .pillars-grid{grid-template-columns:1fr}
+  .pillar{border-right:none;border-bottom:.5px solid color-mix(in srgb,var(--accent) 12%,transparent)}
+  .pillar:last-child{border-bottom:none}
+  .tiers{padding:0 1.2rem 5rem}
+  .tier{gap:1.2rem}
+  #portalGate,#portalRedirect{max-width:100%;padding:2rem 1.2rem;border-left:none;border-right:none}
+  footer{flex-direction:column;text-align:center;padding:2rem 1.2rem}
+}
+@media(min-width:601px) and (max-width:900px){
+  .pillars-grid{grid-template-columns:1fr}
+  .pillar{border-right:none;border-bottom:.5px solid color-mix(in srgb,var(--accent) 12%,transparent)}
+  .pillar:last-child{border-bottom:none}
+}
+
+  </style>
   <script
     async
     crossorigin="anonymous"
     data-clerk-publishable-key="pk_live_Y2xlcmsudmluZGV4LndlYXJlbHZvLmNvbSQ"
     src="https://clerk.vindex.wearelvo.com/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-    type="text/javascript"
   ></script>
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{
-      --red:#8B0000;--red-hi:#CC2020;
-      --chrome:#C8C8D0;--white:#F0EEEC;
-      --dim:#888880;--bg:#000000;
-      --accent:#C8A96E;
-    }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;cursor:default}
-    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.03;pointer-events:none;z-index:9999}
-    .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
-
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.8rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,5,0.97) 0%,transparent 100%)}
-    .nav-left{display:flex;flex-direction:column;gap:0.2rem}
-    .nav-parent{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.35em;color:var(--red-hi);text-decoration:none;text-transform:uppercase;transition:color .3s}
-    .nav-parent:hover{color:var(--chrome)}
-    .nav-mark{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.3em;color:var(--accent);text-decoration:none}
-    .nav-right{display:flex;align-items:center;gap:1.5rem}
-    .nav-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
-
-    /* Nav signed-in state: show user button + dashboard link, hide sign-in prompt */
-    #navUserBtn{display:none;align-items:center;gap:1rem}
-    #navUserBtn.show{display:flex}
-    .nav-dash-link{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;color:var(--accent);text-decoration:none;text-transform:uppercase;border:.5px solid rgba(200,169,110,.35);padding:.35rem .75rem;transition:background .25s,border-color .25s}
-    .nav-dash-link:hover{background:rgba(200,169,110,.1);border-color:var(--accent)}
-    #clerkNavBtn{display:flex;align-items:center}
-
-    /* HERO */
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;position:relative}
-    .hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,90vw);height:min(600px,90vw);border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.07) 0%,transparent 70%);pointer-events:none}
-    .hero-label{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--red-hi);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .3s forwards}
-    .hero-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;letter-spacing:.2em;color:var(--accent);line-height:1;margin-bottom:.5rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .5s forwards}
-    .hero-sub{font-family:'Cinzel',serif;font-size:clamp(.48rem,1.5vw,.65rem);letter-spacing:.4em;color:var(--dim);text-transform:uppercase;margin-bottom:3rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .7s forwards}
-    .hero-statement{font-size:clamp(1rem,3vw,1.5rem);font-weight:300;font-style:italic;line-height:1.8;color:var(--white);opacity:0;max-width:600px;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .9s forwards}
-    .hero-rule{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);margin:3rem auto 0;opacity:0;animation:fadeIn 1s ease 1.4s forwards}
-
-    /* DIVIDER */
-    .section-divider{display:flex;align-items:center;gap:1.5rem;padding:0 2rem;margin:5rem auto;max-width:900px;width:100%}
-    .section-divider::before,.section-divider::after{content:'';flex:1;height:.5px;background:linear-gradient(to right,transparent,var(--accent) 40%,transparent)}
-    .section-divider span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--accent);white-space:nowrap}
-
-    /* PILLARS */
-    .pillars{padding:0 2rem;max-width:1100px;margin:0 auto;width:100%}
-    .pillars-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:.5px solid rgba(200,169,110,.2)}
-    .pillar{padding:3rem 2rem;border-right:.5px solid rgba(200,169,110,.12);position:relative;overflow:hidden;transition:background .4s}
-    .pillar:last-child{border-right:none}
-    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);pointer-events:none}
-    .pillar:hover{background:rgba(200,169,110,.03)}
-    .pillar:hover::before{transform:scaleX(1)}
-    .pillar-icon{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);margin-bottom:1.5rem;display:block;opacity:.7}
-    .pillar-title{font-family:'Cinzel',serif;font-size:.88rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:1rem;text-transform:uppercase}
-    .pillar-text{font-size:.92rem;font-weight:300;line-height:1.9;color:var(--dim);font-style:italic}
-
-    /* TIERS */
-    .tiers{max-width:800px;margin:0 auto;padding:0 2rem 7rem;width:100%}
-    .tier{display:flex;align-items:flex-start;gap:2rem;padding:2.5rem 0;border-bottom:.5px solid rgba(200,169,110,.1)}
-    .tier:last-child{border-bottom:none}
-    .tier-num{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);min-width:48px;padding-top:.2rem}
-    .tier-title{font-family:'Cinzel',serif;font-size:.8rem;font-weight:600;letter-spacing:.2em;color:var(--chrome);margin-bottom:.6rem;text-transform:uppercase}
-    .tier-text{font-size:.92rem;font-weight:300;font-style:italic;line-height:1.9;color:var(--dim)}
-
-    /* PORTAL GATE */
-    .portal-wrap{max-width:960px;margin:0 auto;padding:0 2rem 8rem;width:100%}
-
-    /* Sign-in gate — shown to guests */
-    #portalGate{border:.5px solid rgba(200,169,110,.25);padding:4rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
-    #portalGate::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
-    .gate-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem}
-    .gate-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2.5rem;line-height:1.7}
-    #clerkSignIn{display:flex;justify-content:center;width:100%}
-    #clerkSignIn > *{width:100% !important;max-width:100% !important}
-
-    /* Signed-in redirect card — replaces the sign-in gate for authenticated users */
-    #portalRedirect{display:none;border:.5px solid rgba(200,169,110,.25);padding:3.5rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
-    #portalRedirect::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
-    #portalRedirect.show{display:block}
-    .redirect-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
-    .redirect-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:.5rem}
-    .redirect-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2rem;line-height:1.7}
-    .redirect-btn{display:inline-block;background:transparent;border:.5px solid var(--accent);color:var(--accent);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.38em;padding:1rem 2rem;cursor:pointer;text-transform:uppercase;transition:background .25s,color .25s;text-decoration:none}
-    .redirect-btn:hover{background:var(--accent);color:var(--bg)}
-    .redirect-rule{width:1px;height:32px;background:linear-gradient(to bottom,transparent,rgba(200,169,110,.3),transparent);margin:1.8rem auto 0}
-
-    /* FOOTER */
-    footer{border-top:.5px solid rgba(200,169,110,.15);padding:2.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;margin-top:auto}
-    .footer-back{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .3s}
-    .footer-back:hover{color:var(--accent)}
-    .footer-copy{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.15em;color:rgba(136,136,128,.35)}
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    .reveal{opacity:0;transform:translateY(20px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-
-    /* SCRAMBLE CHARS — word-wrapper keeps line-wraps at word boundaries only */
-    .scramble-word{display:inline-block;white-space:nowrap}
-    .scramble-char{display:inline-block;will-change:contents}
-
-    /* Clerk input fix */
-    .cl-formFieldInput,[data-clerk-input],input.cl-formFieldInput{font-family:'Cormorant Garamond',Georgia,serif !important;font-size:1rem !important;letter-spacing:.04em !important;text-transform:none !important;font-variant:normal !important}
-
-    @media(max-width:600px){
-      nav{padding:1.2rem}.nav-tag{display:none}
-      .pillars{padding:0 1.2rem}.pillars-grid{grid-template-columns:1fr}
-      .pillar{border-right:none;border-bottom:.5px solid rgba(200,169,110,.12)}.pillar:last-child{border-bottom:none}
-      .tiers{padding:0 1.2rem 5rem}.tier{gap:1.2rem}
-      #portalGate,#portalRedirect{max-width:100%;padding:2rem 1.2rem;border-left:none;border-right:none}
-      footer{flex-direction:column;align-items:center;text-align:center;padding:2rem 1.2rem}
-    }
-    @media(min-width:601px) and (max-width:900px){
-      .pillars-grid{grid-template-columns:1fr}
-      .pillar{border-right:none;border-bottom:.5px solid rgba(200,169,110,.12)}.pillar:last-child{border-bottom:none}
-    }
-  </style>
 </head>
 <body>
 <div class="page">
@@ -142,9 +154,8 @@
     </div>
     <div class="nav-right">
       <span class="nav-tag" data-scramble>Real Estate Division</span>
-      <!-- Shown only when signed in -->
       <div id="navUserBtn">
-        <a class="nav-dash-link" href="https://dashboard.vindex.wearelvo.com">→ Dashboard</a>
+        <a class="nav-dash-link" href="">→ Dashboard</a>
         <div id="clerkNavBtn"></div>
       </div>
     </div>
@@ -181,201 +192,172 @@
 
   <div class="section-divider reveal"><span data-scramble>Member Portal</span></div>
   <section class="portal-wrap reveal">
-
-    <!-- GUEST: sign-in form -->
     <div id="portalGate">
       <p class="gate-title" data-scramble>Vindex Portal Access</p>
       <p class="gate-sub" data-scramble-block>Sign in to access your Vindex member dashboard.<br/>New members are assigned Tier IV upon first sign-in.</p>
       <div id="clerkSignIn"></div>
     </div>
-
-    <!-- SIGNED IN: redirect card, no account data shown here -->
     <div id="portalRedirect">
       <p class="redirect-title" data-scramble>Vindex Portal</p>
       <p class="redirect-name" id="redirectName">—</p>
       <p class="redirect-sub" data-scramble>You're signed in. Your dashboard is waiting.</p>
-      <a class="redirect-btn" href="https://dashboard.vindex.wearelvo.com/">Enter Dashboard →</a>
+      <a class="redirect-btn" href="">Enter Dashboard →</a>
       <div class="redirect-rule"></div>
     </div>
-
   </section>
 
   <footer>
     <a class="footer-back" href="https://wearelvo.com" data-scramble>← wearelvo.com</a>
+    <div class="footer-links">
+      <a href="https://wearelvo.com/terms">Terms of Service</a>
+      <span>·</span>
+      <a href="https://wearelvo.com/privacy">Privacy Policy</a>
+    </div>
     <span class="footer-copy">&copy; 2026 LVO Holdings · All Rights Reserved</span>
   </footer>
 </div>
 
+<script>window.LVO_PAGE = { accent: '#C8A96E', dashboardUrl: 'https://dashboard.vindex.wearelvo.com' };</script>
 <script>
-/* Scroll reveal */
-document.querySelectorAll('.reveal').forEach(r => {
-  new IntersectionObserver((entries, o) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); o.unobserve(e.target); }
-    });
-  }, { threshold: .08 }).observe(r);
-});
+/* LVO Holdings — shared division-site behavior
+   Expects window.LVO_PAGE = { accent: '#hex', dashboardUrl: 'https://...' } set inline before this script. */
+(function () {
+  const { accent, dashboardUrl } = window.LVO_PAGE || {};
 
-/* ── SCRAMBLE CONFIG — edit these three values ── */
-const SCRAMBLE_RADIUS   = 20;   // ← cursor radius in px
-const SCRAMBLE_DURATION = 200;  // ← how long each char scrambles in ms
-const SCRAMBLE_CHARS    = 'LVOᛪ༙';
+  /* Scroll reveal */
+  document.querySelectorAll('.reveal').forEach((r) => {
+    new IntersectionObserver((entries, o) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); o.unobserve(e.target); }
+      });
+    }, { threshold: .08 }).observe(r);
+  });
 
-/*
-  Characters are grouped into a per-word wrapper (.scramble-word,
-  white-space:nowrap) so the browser can only break lines between
-  words, never in the middle of one.
-*/
-function buildWordSpan(word) {
-  const wordSpan = document.createElement('span');
-  wordSpan.className = 'scramble-word';
-  for (const ch of word) {
-    const charSpan = document.createElement('span');
-    charSpan.className = 'scramble-char';
-    charSpan.dataset.orig = ch;
-    charSpan.textContent = ch;
-    wordSpan.appendChild(charSpan);
+  /* Scramble text — cursor-proximity character scramble, word-wrapped so lines only break between words */
+  const RADIUS = 20, DURATION = 200, CHARS = 'LVOᛪ༙';
+
+  function buildWordSpan(word) {
+    const span = document.createElement('span');
+    span.className = 'scramble-word';
+    for (const ch of word) {
+      const c = document.createElement('span');
+      c.className = 'scramble-char';
+      c.dataset.orig = ch;
+      c.textContent = ch;
+      span.appendChild(c);
+    }
+    return span;
   }
-  return wordSpan;
-}
 
-function splitTextNode(textNode) {
-  const text = textNode.textContent;
-  const frag = document.createDocumentFragment();
-  const parts = text.split(/(\s+)/);
-  parts.forEach(part => {
-    if (part === '') return;
-    if (/^\s+$/.test(part)) {
-      frag.appendChild(document.createTextNode(part));
-    } else {
-      frag.appendChild(buildWordSpan(part));
-    }
+  function splitTextNode(node) {
+    const frag = document.createDocumentFragment();
+    node.textContent.split(/(\s+)/).forEach((part) => {
+      if (!part) return;
+      frag.appendChild(/^\s+$/.test(part) ? document.createTextNode(part) : buildWordSpan(part));
+    });
+    return frag;
+  }
+
+  document.querySelectorAll('[data-scramble], [data-scramble-block]').forEach((el) => {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach((tn) => tn.textContent.trim() && tn.parentNode.replaceChild(splitTextNode(tn), tn));
   });
-  return frag;
-}
 
-function splitElement(el) {
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-  const nodes = [];
-  let n;
-  while ((n = walker.nextNode())) nodes.push(n);
-  nodes.forEach(tn => {
-    if (tn.textContent.trim()) tn.parentNode.replaceChild(splitTextNode(tn), tn);
-  });
-}
-
-document.querySelectorAll('[data-scramble], [data-scramble-block]').forEach(el => {
-  splitElement(el);
-});
-
-const activeTimers = new Map();
-
-function scrambleChar(span) {
-  const orig = span.dataset.orig;
-  if (!orig) return;
-  if (activeTimers.has(span)) clearInterval(activeTimers.get(span));
-  const start = performance.now();
-  const id = setInterval(() => {
-    const elapsed = performance.now() - start;
-    if (elapsed < SCRAMBLE_DURATION) {
-      span.textContent = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-    } else {
-      span.textContent = orig;
-      clearInterval(id);
-      activeTimers.delete(span);
-    }
-  }, 33);
-  activeTimers.set(span, id);
-}
-
-let raf = null;
-document.addEventListener('pointermove', (e) => {
-  if (raf) return;
-  raf = requestAnimationFrame(() => {
-    raf = null;
-    document.querySelectorAll('.scramble-char').forEach(span => {
-      const rect = span.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-      if (dist < SCRAMBLE_RADIUS) {
-        const proximity = 1 - dist / SCRAMBLE_RADIUS;
-        if (Math.random() < proximity * 0.35) scrambleChar(span);
+  const timers = new Map();
+  function scrambleChar(span) {
+    const orig = span.dataset.orig;
+    if (!orig) return;
+    if (timers.has(span)) clearInterval(timers.get(span));
+    const start = performance.now();
+    const id = setInterval(() => {
+      const t = performance.now() - start;
+      if (t < DURATION) {
+        span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+      } else {
+        span.textContent = orig;
+        clearInterval(id);
+        timers.delete(span);
       }
+    }, 33);
+    timers.set(span, id);
+  }
+
+  let raf = null;
+  document.addEventListener('pointermove', (e) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = null;
+      document.querySelectorAll('.scramble-char').forEach((span) => {
+        const r = span.getBoundingClientRect();
+        const dist = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+        if (dist < RADIUS && Math.random() < (1 - dist / RADIUS) * 0.35) scrambleChar(span);
+      });
     });
   });
-});
 
-const clerkAppearance = {
-  variables: {
-    colorBackground: '#050505', colorText: '#F0EEEC', colorPrimary: '#C8A96E',
-    colorInputBackground: 'transparent', colorInputText: '#F0EEEC',
-    borderRadius: '0px', fontFamily: "'Cormorant Garamond',Georgia,serif"
-  },
-  elements: {
-    card: { background: 'transparent', border: '.5px solid rgba(200,169,110,.25)', boxShadow: 'none', borderRadius: '0' },
-    headerTitle: { fontFamily: "'Cinzel',serif", letterSpacing: '.2em', color: '#C8C8D0' },
-    headerSubtitle: { color: '#888880', fontStyle: 'italic' },
-    formFieldLabel: { color: '#888880', fontFamily: "'Cinzel',serif", letterSpacing: '.12em', fontSize: '.7rem' },
-    formFieldInput: { background: 'transparent', border: '.5px solid rgba(200,169,110,.35)', borderRadius: '0', color: '#F0EEEC', fontFamily: "Georgia,'Times New Roman',serif", fontSize: '1rem', letterSpacing: '.04em', textTransform: 'none', fontVariant: 'normal' },
-    formButtonPrimary: { background: 'transparent', border: '.5px solid #C8A96E', borderRadius: '0', color: '#C8A96E', fontFamily: "'Cinzel',serif", letterSpacing: '.3em', textTransform: 'uppercase', boxShadow: 'none' },
-    footerActionLink: { color: '#C8A96E' },
-    dividerLine: { background: 'rgba(200,169,110,.2)' },
-    dividerText: { color: '#888880' },
-    socialButtonsIconButton: { background: 'transparent', border: '.5px solid rgba(200,169,110,.25)', borderRadius: '0' },
-    avatarBox: { border: '.5px solid rgba(200,169,110,.4)', borderRadius: '0' }
-  }
-};
-
-window.addEventListener('load', async () => {
-  await Clerk.load();
-
-  const gate        = document.getElementById('portalGate');
-  const redirect    = document.getElementById('portalRedirect');
-  const navUserBtn  = document.getElementById('navUserBtn');
-  const clerkNavBtn = document.getElementById('clerkNavBtn');
-  const signInEl    = document.getElementById('clerkSignIn');
-
-  let signInMounted = false;
-
-  function showGate() {
-    gate.style.display = 'block';
-    redirect.classList.remove('show');
-    navUserBtn.classList.remove('show');
-    if (!signInMounted) {
-      Clerk.mountSignIn(signInEl, { appearance: clerkAppearance, routing: 'virtual' });
-      signInMounted = true;
+  /* Clerk auth wiring */
+  const clerkAppearance = {
+    variables: {
+      colorBackground: '#050505', colorText: '#F0EEEC', colorPrimary: accent,
+      colorInputBackground: 'transparent', colorInputText: '#F0EEEC',
+      borderRadius: '0px', fontFamily: "'Cormorant Garamond',Georgia,serif"
+    },
+    elements: {
+      card: { background: 'transparent', border: `.5px solid ${accent}40`, boxShadow: 'none', borderRadius: '0' },
+      headerTitle: { fontFamily: "'Cinzel',serif", letterSpacing: '.2em', color: '#C8C8D0' },
+      headerSubtitle: { color: '#888880', fontStyle: 'italic' },
+      formFieldLabel: { color: '#888880', fontFamily: "'Cinzel',serif", letterSpacing: '.12em', fontSize: '.7rem' },
+      formFieldInput: { background: 'transparent', border: `.5px solid ${accent}59`, borderRadius: '0', color: '#F0EEEC', fontFamily: "Georgia,'Times New Roman',serif", fontSize: '1rem', letterSpacing: '.04em', textTransform: 'none', fontVariant: 'normal' },
+      formButtonPrimary: { background: 'transparent', border: `.5px solid ${accent}`, borderRadius: '0', color: accent, fontFamily: "'Cinzel',serif", letterSpacing: '.3em', textTransform: 'uppercase', boxShadow: 'none' },
+      footerActionLink: { color: accent },
+      dividerLine: { background: `${accent}33` },
+      dividerText: { color: '#888880' },
+      socialButtonsIconButton: { background: 'transparent', border: `.5px solid ${accent}40`, borderRadius: '0' },
+      avatarBox: { border: `.5px solid ${accent}66`, borderRadius: '0' }
     }
-  }
+  };
 
-  function showSignedIn(user) {
-    // Hide sign-in gate, show only the redirect card — no profile data beyond first name
-    gate.style.display = 'none';
-    redirect.classList.add('show');
+  window.addEventListener('load', async () => {
+    await Clerk.load();
 
-    // Show first name only — just enough to confirm they're signed in
-    const firstName = user.firstName || 'Member';
-    document.getElementById('redirectName').textContent = firstName;
+    const gate = document.getElementById('portalGate');
+    const redirect = document.getElementById('portalRedirect');
+    const navUserBtn = document.getElementById('navUserBtn');
+    const clerkNavBtn = document.getElementById('clerkNavBtn');
+    const signInEl = document.getElementById('clerkSignIn');
+    let signInMounted = false;
 
-    // Nav: show dashboard link + user button (for sign-out access)
-    navUserBtn.classList.add('show');
-    Clerk.mountUserButton(clerkNavBtn, { appearance: clerkAppearance });
-  }
-
-  if (Clerk.user) {
-    showSignedIn(Clerk.user);
-  } else {
-    showGate();
-  }
-
-  Clerk.addListener(({ user }) => {
-    if (user) {
-      showSignedIn(user);
-    } else {
-      showGate();
+    function showGate() {
+      gate.style.display = 'block';
+      redirect.classList.remove('show');
+      navUserBtn.classList.remove('show');
+      if (!signInMounted) {
+        Clerk.mountSignIn(signInEl, { appearance: clerkAppearance, routing: 'virtual' });
+        signInMounted = true;
+        // Clerk autofocuses its first input on mount, which scrolls the page down — pin it back to top
+        [0, 50, 300].forEach((t) => setTimeout(() => window.scrollTo(0, 0), t));
+      }
     }
+
+    function showSignedIn(user) {
+      gate.style.display = 'none';
+      redirect.classList.add('show');
+      document.getElementById('redirectName').textContent = user.firstName || 'Member';
+      navUserBtn.classList.add('show');
+      Clerk.mountUserButton(clerkNavBtn, { appearance: clerkAppearance });
+    }
+
+    Clerk.user ? showSignedIn(Clerk.user) : showGate();
+    Clerk.addListener(({ user }) => (user ? showSignedIn(user) : showGate()));
+
+    document.querySelectorAll('.nav-dash-link, .redirect-btn').forEach((a) => (a.href = dashboardUrl));
   });
-});
-</script>
+})();
+
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"57d5cd2fcb53490c8c986ef27590d71d","r":1}' crossorigin="anonymous"></script>
 </body>
 </html>
