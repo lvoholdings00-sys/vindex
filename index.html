@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LVO Vindex · Systems Down</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C8A96E;--white:#F0EEEC;--dim:#888880;--bg:#050505;--red:#9D7D42}
+html,body{min-height:100%;background:var(--bg)}
+body{color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative}
+.logo{position:absolute;top:2rem;left:2.5rem;font:600 .9rem 'Cinzel',serif;letter-spacing:.3em;color:var(--gold)}
+.status{font:600 .55rem 'Cinzel',serif;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;animation:pulse 2.5s ease-in-out infinite}
+.icon{width:58px;height:58px;border:1px solid rgba(200,169,110,.45);border-radius:50%;display:grid;place-items:center;margin:0 auto 2rem;position:relative}
+.icon:before{content:"";width:8px;height:8px;border:1px solid var(--gold);border-radius:50%}
+.icon:after{content:"";position:absolute;width:78px;height:78px;border:1px solid rgba(200,169,110,.09);border-radius:50%;animation:spin 12s linear infinite}
+h1{font:900 clamp(2.4rem,7vw,5.4rem) 'Cinzel',serif;letter-spacing:.12em;line-height:1;color:var(--white);margin-bottom:1.2rem}
+.sub{font-size:clamp(1rem,2vw,1.3rem);font-style:italic;font-weight:300;color:var(--dim);line-height:1.8;max-width:600px;margin:auto}
+.rule{width:1px;height:60px;background:linear-gradient(transparent,var(--gold),transparent);margin:2.5rem auto}
+.note{font: .5rem 'Cinzel',serif;letter-spacing:.28em;text-transform:uppercase;color:rgba(136,136,128,.65)}
+footer{position:absolute;bottom:1.8rem;font: .45rem 'Cinzel',serif;letter-spacing:.2em;color:rgba(136,136,128,.4);text-transform:uppercase}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){.logo{left:1.2rem;top:1.2rem}.page{padding:1.5rem}.sub{max-width:90vw}footer{bottom:1rem}}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="logo">LVO</div>
+  <div class="status">LVO Vindex · Real Estate Division</div>
+  <div class="icon"></div>
+  <h1>Systems Down</h1>
+  <p class="sub">LVO Vindex is temporarily unavailable while we perform maintenance or address a service interruption.</p>
+  <div class="rule"></div>
+  <p class="note">Please check back shortly</p>
+  <footer>&copy; 2026 LVO Holdings · All Rights Reserved</footer>
+</main>
+</body>
+</html>
