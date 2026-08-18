@@ -6,6 +6,11 @@
  * "universal but separated by division" — same worker, same credentials
  * system, but each site only ever authenticates against its own division.
  *
+ * Color: the widget uses `var(--accent, #7F77DD)` throughout instead of a
+ * hardcoded color, so it automatically picks up whichever accent color the
+ * host page defines in :root (gold for Vindex, green for Ops, etc.).
+ * Falls back to purple (#7F77DD) only if the host page defines no --accent.
+ *
  * Password resets are not self-service: there is no reset-by-email flow on
  * the worker. "Forgot password" simply directs the member to LVO Administration.
  */
@@ -29,25 +34,25 @@ const LVOAuthWidget = (function () {
     style.setAttribute('data-lvo-auth', '');
     style.textContent = `
       .lvo-auth{width:100%;max-width:340px;font-family:'Cormorant Garamond',Georgia,serif;color:#F0EEEC}
-      .lvo-auth-tabs{display:flex;margin-bottom:1.4rem;border-bottom:.5px solid rgba(127,119,221,.2)}
+      .lvo-auth-tabs{display:flex;margin-bottom:1.4rem;border-bottom:.5px solid color-mix(in srgb, var(--accent, #7F77DD) 20%, transparent)}
       .lvo-auth-tab{flex:1;background:none;border:none;color:#888880;font-family:'Cinzel',serif;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;padding:.7rem 0;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
-      .lvo-auth-tab.active{color:#7F77DD;border-bottom-color:#7F77DD}
+      .lvo-auth-tab.active{color:var(--accent, #7F77DD);border-bottom-color:var(--accent, #7F77DD)}
       .lvo-field{margin-bottom:.9rem;text-align:left}
       .lvo-field label{display:block;font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.3em;color:#888880;text-transform:uppercase;margin-bottom:.4rem}
-      .lvo-field input{width:100%;background:transparent;border:.5px solid rgba(127,119,221,.3);color:#F0EEEC;font-family:'Cormorant Garamond',serif;font-size:.95rem;padding:.65rem .8rem;outline:none;box-sizing:border-box;transition:border-color .25s}
-      .lvo-field input:focus{border-color:#7F77DD}
+      .lvo-field input{width:100%;background:transparent;border:.5px solid color-mix(in srgb, var(--accent, #7F77DD) 30%, transparent);color:#F0EEEC;font-family:'Cormorant Garamond',serif;font-size:.95rem;padding:.65rem .8rem;outline:none;box-sizing:border-box;transition:border-color .25s}
+      .lvo-field input:focus{border-color:var(--accent, #7F77DD)}
       .lvo-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-      .lvo-btn{width:100%;background:transparent;border:.5px solid #7F77DD;color:#7F77DD;font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.3em;padding:.8rem;cursor:pointer;text-transform:uppercase;margin-top:.4rem;transition:background .25s,color .25s;box-sizing:border-box;text-decoration:none;display:block;text-align:center}
-      .lvo-btn:hover{background:#7F77DD;color:#000}
+      .lvo-btn{width:100%;background:transparent;border:.5px solid var(--accent, #7F77DD);color:var(--accent, #7F77DD);font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.3em;padding:.8rem;cursor:pointer;text-transform:uppercase;margin-top:.4rem;transition:background .25s,color .25s;box-sizing:border-box;text-decoration:none;display:block;text-align:center}
+      .lvo-btn:hover{background:var(--accent, #7F77DD);color:#000}
       .lvo-btn:disabled{opacity:.4;cursor:not-allowed}
       .lvo-err{color:#CC2020;font-size:.8rem;font-style:italic;margin-top:.6rem;min-height:1.2em}
       .lvo-msg{color:#888880;font-size:.85rem;font-style:italic;margin-bottom:1.1rem;line-height:1.7;text-align:center}
       .lvo-code-input{letter-spacing:.6em !important;text-align:center;font-size:1.2rem !important}
-      .lvo-resend{display:block;width:100%;text-align:center;background:none;border:none;color:#7F77DD;font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:.9rem;padding:.4rem}
+      .lvo-resend{display:block;width:100%;text-align:center;background:none;border:none;color:var(--accent, #7F77DD);font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:.9rem;padding:.4rem}
       .lvo-back{display:block;width:100%;text-align:center;background:none;border:none;color:#6A6A64;font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:.5rem;padding:.3rem}
       .lvo-forgot{display:block;width:100%;text-align:center;background:none;border:none;color:#6A6A64;font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:.7rem;padding:.3rem;transition:color .2s}
-      .lvo-forgot:hover{color:#7F77DD}
-      .lvo-recovery-email{display:block;color:#7F77DD;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;text-align:center;margin:.9rem 0 1.3rem;word-break:break-all}
+      .lvo-forgot:hover{color:var(--accent, #7F77DD)}
+      .lvo-recovery-email{display:block;color:var(--accent, #7F77DD);font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;text-align:center;margin:.9rem 0 1.3rem;word-break:break-all}
     `;
     container.appendChild(style);
   }
