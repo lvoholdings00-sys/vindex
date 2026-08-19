@@ -52,10 +52,10 @@ const LVOAuth = (function () {
     });
   }
 
-  async function login({ email, password, division }) {
+  async function login({ identifier, password, division }) {
     return request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password, division }),
+      body: JSON.stringify({ identifier, password, division }),
     });
   }
 
