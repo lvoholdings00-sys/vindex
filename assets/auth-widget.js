@@ -115,8 +115,10 @@ const LVOAuthWidget = (function () {
         row.appendChild(fieldEl('lastName', 'Last Name', 'text', { autocomplete: 'family-name' }));
         form.appendChild(row);
         form.appendChild(fieldEl('username', 'Username', 'text', { autocomplete: 'username' }));
+        form.appendChild(fieldEl('email', 'Email', 'email', { autocomplete: 'email' }));
+      } else {
+        form.appendChild(fieldEl('identifier', 'Email or Username', 'text', { autocomplete: 'username' }));
       }
-      form.appendChild(fieldEl('email', 'Email', 'email', { autocomplete: 'email' }));
       form.appendChild(fieldEl('password', 'Password', 'password', {
         autocomplete: mode === 'login' ? 'current-password' : 'new-password',
       }));
@@ -159,12 +161,12 @@ const LVOAuthWidget = (function () {
 
     async function doLogin() {
       setError('');
-      const email = val('email'), password = val('password');
-      if (!email || !password) return setError('Email and password required.');
+      const identifier = val('identifier'), password = val('password');
+      if (!identifier || !password) return setError('Email/username and password required.');
       const btn = wrap.querySelector('.lvo-btn');
       btn.disabled = true;
       try {
-        const data = await LVOAuth.login({ email, password, division });
+        const data = await LVOAuth.login({ identifier, password, division });
         pending = { userId: data.userId, email: data.email, purpose: 'login' };
         renderCodeForm();
       } catch (e) {
