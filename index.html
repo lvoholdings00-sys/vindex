@@ -72,6 +72,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.8rem 4rem;display:
 .gate-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2.5rem;line-height:1.75}
 #authMount{display:flex;justify-content:center;width:100%}
 
+.request-note{max-width:420px;margin:2rem auto 0;text-align:center}
+.request-note p{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);line-height:1.85}
+.request-note a{color:var(--accent);text-decoration:none;border-bottom:.5px solid color-mix(in srgb,var(--accent) 35%,transparent);transition:border-color .25s;white-space:nowrap}
+.request-note a:hover{border-color:var(--accent)}
+
 #portalRedirect{display:none;border:.5px solid color-mix(in srgb,var(--accent) 25%,transparent);padding:3.5rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
 #portalRedirect::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
 #portalRedirect.show{display:block}
@@ -169,10 +174,15 @@ footer{border-top:.5px solid color-mix(in srgb,var(--accent) 15%,transparent);pa
   <div class="section-divider reveal"><span data-scramble>Member Portal</span></div>
   <section class="portal-wrap reveal">
     <div id="portalGate">
-      <p class="gate-title" data-scramble>Vindex Portal Access</p>
-      <p class="gate-sub">Sign in or request access below.<br/>New members are assigned Tier IV until reviewed by LVO Administration.</p>
+      <p class="gate-title" data-scramble id="gateTitle">Vindex Portal Access</p>
+      <p class="gate-sub" id="gateSub">This portal is for accepted members only.<br/>Sign in below with your credentials.</p>
       <div id="authMount"></div>
     </div>
+
+    <div class="request-note">
+      <p>Not yet a member? Access to LVO Vindex is by invitation and review only. To request consideration, email <a href="mailto:join@wearelvo.com?subject=Requesting%20Access%20%E2%80%94%20Vindex">join@wearelvo.com</a>.</p>
+    </div>
+
     <div id="portalRedirect">
       <p class="redirect-title" data-scramble>Vindex Portal</p>
       <p class="redirect-name" id="redirectName">—</p>
@@ -284,6 +294,7 @@ document.addEventListener('pointermove', (e) => {
     navUserBtn.classList.remove('show');
     LVOAuthWidget.mount(document.getElementById('authMount'), {
       division: 'Vindex',
+      allowSignup: false,
       onAuthenticated: showSignedIn,
     });
   }
