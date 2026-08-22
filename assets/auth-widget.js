@@ -1,5 +1,5 @@
 /**
- * LVOAuthWidget — mounts a sign-in / sign-up / 2FA / forgot-password form.
+ * LVOAuthWidget — mounts a sign-in / 2FA / forgot-password form.
  * Usage: LVOAuthWidget.mount(el, { division: 'Alliance', onAuthenticated: (user) => {} })
  * `division` is fixed per-site: the Alliance site always passes 'Alliance',
  * the Vindex site always passes 'Vindex', etc. That's what makes login
@@ -13,9 +13,14 @@
  *
  * Password resets are not self-service: there is no reset-by-email flow on
  * the worker. "Forgot password" simply directs the member to LVO Administration.
+ *
+ * Sign-up is intentionally not offered here. Membership on these sites is
+ * by invitation/review only — visitors who want in are pointed to
+ * REQUEST_EMAIL so LVO Administration can vet and provision an account.
  */
 const LVOAuthWidget = (function () {
   const RECOVERY_EMAIL = 'accountrecovery@wearelvo.com';
+  const REQUEST_EMAIL = 'join@wearelvo.com';
 
   function h(tag, attrs = {}, children = []) {
     const e = document.createElement(tag);
@@ -53,6 +58,8 @@ const LVOAuthWidget = (function () {
       .lvo-forgot{display:block;width:100%;text-align:center;background:none;border:none;color:#6A6A64;font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:.7rem;padding:.3rem;transition:color .2s}
       .lvo-forgot:hover{color:var(--accent, #7F77DD)}
       .lvo-recovery-email{display:block;color:var(--accent, #7F77DD);font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;text-align:center;margin:.9rem 0 1.3rem;word-break:break-all}
+      .lvo-request{display:block;width:100%;text-align:center;background:none;border:none;color:#6A6A64;font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:1.1rem;padding:.3rem;text-decoration:none;transition:color .2s}
+      .lvo-request:hover{color:var(--accent, #7F77DD)}
     `;
     container.appendChild(style);
   }
@@ -64,7 +71,6 @@ const LVOAuthWidget = (function () {
     const wrap = h('div', { class: 'lvo-auth' });
     container.appendChild(wrap);
 
-    let mode = 'login'; // 'login' | 'signup'
     let pending = null; // { userId, email, purpose }
 
     function setError(msg) {
@@ -87,57 +93,35 @@ const LVOAuthWidget = (function () {
     function renderAuthForm() {
       pending = null;
       wrap.innerHTML = '';
-      const tabs = h('div', { class: 'lvo-auth-tabs' }, [
-        h('button', {
-          class: 'lvo-auth-tab' + (mode === 'login' ? ' active' : ''),
-          type: 'button',
-          text: 'Sign In',
-          onClick: () => { mode = 'login'; renderAuthForm(); },
-        }),
-        h('button', {
-          class: 'lvo-auth-tab' + (mode === 'signup' ? ' active' : ''),
-          type: 'button',
-          text: 'Sign Up',
-          onClick: () => { mode = 'signup'; renderAuthForm(); },
-        }),
-      ]);
-      wrap.appendChild(tabs);
 
       const form = h('form');
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        mode === 'login' ? doLogin() : doSignup();
+        doLogin();
       });
 
-      if (mode === 'signup') {
-        const row = h('div', { class: 'lvo-row' });
-        row.appendChild(fieldEl('firstName', 'First Name', 'text', { autocomplete: 'given-name' }));
-        row.appendChild(fieldEl('lastName', 'Last Name', 'text', { autocomplete: 'family-name' }));
-        form.appendChild(row);
-        form.appendChild(fieldEl('username', 'Username', 'text', { autocomplete: 'username' }));
-        form.appendChild(fieldEl('email', 'Email', 'email', { autocomplete: 'email' }));
-      } else {
-        form.appendChild(fieldEl('identifier', 'Email or Username', 'text', { autocomplete: 'username' }));
-      }
-      form.appendChild(fieldEl('password', 'Password', 'password', {
-        autocomplete: mode === 'login' ? 'current-password' : 'new-password',
-      }));
+      form.appendChild(fieldEl('identifier', 'Email or Username', 'text', { autocomplete: 'username' }));
+      form.appendChild(fieldEl('password', 'Password', 'password', { autocomplete: 'current-password' }));
       form.appendChild(h('div', { class: 'lvo-err' }));
       form.appendChild(h('button', {
         class: 'lvo-btn',
         type: 'submit',
-        text: mode === 'login' ? 'Sign In →' : 'Create Account →',
+        text: 'Sign In →',
       }));
       wrap.appendChild(form);
 
-      if (mode === 'login') {
-        wrap.appendChild(h('button', {
-          class: 'lvo-forgot',
-          type: 'button',
-          text: 'Forgot Password?',
-          onClick: renderForgotPassword,
-        }));
-      }
+      wrap.appendChild(h('button', {
+        class: 'lvo-forgot',
+        type: 'button',
+        text: 'Forgot Password?',
+        onClick: renderForgotPassword,
+      }));
+
+      wrap.appendChild(h('a', {
+        class: 'lvo-request',
+        href: `mailto:${REQUEST_EMAIL}?subject=${encodeURIComponent('Requesting Access — ' + division)}`,
+        text: 'Not a Member? Request Access →',
+      }));
     }
 
     function renderForgotPassword() {
@@ -168,24 +152,6 @@ const LVOAuthWidget = (function () {
       try {
         const data = await LVOAuth.login({ identifier, password, division });
         pending = { userId: data.userId, email: data.email, purpose: 'login' };
-        renderCodeForm();
-      } catch (e) {
-        setError((e.data && e.data.error) || e.message);
-        btn.disabled = false;
-      }
-    }
-
-    async function doSignup() {
-      setError('');
-      const firstName = val('firstName'), lastName = val('lastName'), username = val('username'),
-        email = val('email'), password = val('password');
-      if (!firstName || !lastName || !username || !email || !password) return setError('All fields are required.');
-      if (password.length < 8) return setError('Password must be at least 8 characters.');
-      const btn = wrap.querySelector('.lvo-btn');
-      btn.disabled = true;
-      try {
-        const data = await LVOAuth.signup({ firstName, lastName, username, email, password, division });
-        pending = { userId: data.userId, email: data.email, purpose: 'verify' };
         renderCodeForm();
       } catch (e) {
         setError((e.data && e.data.error) || e.message);
