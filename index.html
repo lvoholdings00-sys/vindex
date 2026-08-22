@@ -294,6 +294,9 @@ document.addEventListener('pointermove', (e) => {
     navUserBtn.classList.remove('show');
     LVOAuthWidget.mount(document.getElementById('authMount'), {
       division: 'Vindex',
+      // Invite-only: accounts are created by LVO Administration. If your
+      // auth-widget build supports a flag to hide its self-registration
+      // tab, pass it here too, e.g. allowSignup: false.
       allowSignup: false,
       onAuthenticated: showSignedIn,
     });
