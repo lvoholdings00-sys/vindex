@@ -5,6 +5,7 @@
  */
 const LVOAuth = (function () {
   const WORKER = 'https://lvo-worker.lvoholdings00.workers.dev';
+
   const STORAGE_KEY = 'lvo_token';
 
   function getToken() {

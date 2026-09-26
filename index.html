@@ -3,136 +3,125 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LVO Vindex · Real Estate</title>
+  <title>LVO Vindex · Real Estate & Asset Management</title>
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
   <style>
-:root{--accent:#C8A96E}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --red:#8B0000;--red-hi:#CC2020;
-  --chrome:#C8C8D0;--white:#F0EEEC;
-  --dim:#888880;--bg:#000000;
-}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;cursor:default}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --accent:#C8A96E;
+      --red:#8B0000;--red-hi:#CC2020;
+      --chrome:#C8C8D0;--white:#F0EEEC;
+      --dim:#888880;--bg:#000000;
+      --gold:#C8A96E;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;cursor:default}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.03;pointer-events:none;z-index:9999}
+    .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.8rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,5,.97),transparent)}
-.nav-left{display:flex;flex-direction:column;gap:.2rem}
-.nav-parent{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.35em;color:var(--red-hi);text-decoration:none;text-transform:uppercase;transition:color .3s}
-.nav-parent:hover{color:var(--chrome)}
-.nav-mark{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.3em;color:var(--accent);text-decoration:none}
-.nav-right{display:flex;align-items:center;gap:1.5rem}
-.nav-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
-#navUserBtn{display:none;align-items:center;gap:1rem}
-#navUserBtn.show{display:flex}
-.nav-dash-link{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;color:var(--accent);text-decoration:none;text-transform:uppercase;border:.5px solid color-mix(in srgb,var(--accent) 35%,transparent);padding:.35rem .75rem;transition:background .25s,border-color .25s}
-.nav-dash-link:hover{background:color-mix(in srgb,var(--accent) 10%,transparent);border-color:var(--accent)}
-.user-chip{display:flex;align-items:center;gap:.8rem}
-.user-chip-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:.5px solid color-mix(in srgb,var(--accent) 40%,transparent)}
-.user-chip-email{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.12em;color:var(--chrome);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-signout{background:none;border:.5px solid color-mix(in srgb,var(--accent) 30%,transparent);color:var(--dim);font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.2em;padding:.4rem .75rem;cursor:pointer;text-transform:uppercase;transition:color .25s,border-color .25s}
-.user-signout:hover{color:var(--accent);border-color:var(--accent)}
+    /* Divisions Bar */
+    .div-bar{height:28px;background:#050505;border-bottom:.5px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;position:fixed;top:0;left:0;right:0;z-index:210}
+    .div-links{display:flex;align-items:center;gap:1.5rem}
+    .div-link{color:var(--dim);text-decoration:none;transition:color .2s}
+    .div-link:hover{color:var(--white)}
+    .div-link.active{color:var(--accent);font-weight:600}
+    .div-brand{color:var(--dim);letter-spacing:.3em}
 
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 4rem;position:relative}
-.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,90vw);height:min(600px,90vw);border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 7%,transparent) 0%,transparent 70%)}
-.hero-label{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--red-hi);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .3s forwards}
-.hero-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;letter-spacing:.2em;color:var(--accent);line-height:1;margin-bottom:.5rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .5s forwards}
-.hero-sub{font-family:'Cinzel',serif;font-size:clamp(.48rem,1.5vw,.65rem);letter-spacing:.4em;color:var(--dim);text-transform:uppercase;margin-bottom:3rem;opacity:0;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .7s forwards}
-.hero-statement{font-size:clamp(1rem,3vw,1.5rem);font-weight:300;font-style:italic;line-height:1.8;color:var(--white);opacity:0;max-width:600px;animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .9s forwards}
-.hero-rule{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);margin:3rem auto 0;opacity:0;animation:fadeIn 1s ease 1.4s forwards}
+    nav{position:fixed;top:28px;left:0;right:0;z-index:200;padding:1.4rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,5,0.97) 0%,transparent 100%)}
+    .nav-left{display:flex;flex-direction:column;gap:0.2rem}
+    .nav-parent{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.35em;color:var(--accent);text-decoration:none;text-transform:uppercase;transition:color .3s}
+    .nav-parent:hover{color:var(--chrome)}
+    .nav-mark{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.3em;color:var(--accent);text-decoration:none}
+    .nav-right{display:flex;align-items:center;gap:1.5rem}
+    .nav-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
 
-.section-divider{display:flex;align-items:center;gap:1.5rem;padding:0 2rem;margin:5rem auto;max-width:900px;width:100%}
-.section-divider::before,.section-divider::after{content:'';flex:1;height:.5px;background:linear-gradient(to right,transparent,var(--accent) 40%,transparent)}
-.section-divider span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--accent);white-space:nowrap}
+    #navUserBtn{display:none;align-items:center;gap:1rem}
+    #navUserBtn.show{display:flex}
+    .nav-dash-link{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;color:var(--accent);text-decoration:none;text-transform:uppercase;border:.5px solid rgba(200,169,110,.35);padding:.35rem .75rem;transition:background .25s,border-color .25s}
+    .nav-dash-link:hover{background:rgba(200,169,110,.1);border-color:var(--accent)}
+    .user-chip{display:flex;align-items:center;gap:.8rem}
+    .user-chip-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:.5px solid rgba(200,169,110,.4)}
+    .user-chip-email{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.12em;color:var(--chrome);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .user-signout{background:none;border:.5px solid rgba(200,169,110,.3);color:var(--dim);font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.2em;padding:.4rem .75rem;cursor:pointer;text-transform:uppercase;transition:color .25s,border-color .25s}
+    .user-signout:hover{color:var(--accent);border-color:var(--accent)}
 
-.pillars{padding:0 2rem;max-width:1100px;margin:0 auto;width:100%}
-.pillars-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:.5px solid color-mix(in srgb,var(--accent) 20%,transparent)}
-.pillar{padding:3rem 2rem;border-right:.5px solid color-mix(in srgb,var(--accent) 12%,transparent);border-bottom:.5px solid color-mix(in srgb,var(--accent) 12%,transparent);position:relative;overflow:hidden;transition:background .4s}
-.pillar:first-child{grid-column:1/-1;border-bottom:.5px solid color-mix(in srgb,var(--accent) 12%,transparent);padding:3.5rem 2rem}
-.pillar:nth-child(2){border-right:.5px solid color-mix(in srgb,var(--accent) 12%,transparent)}
-.pillar:last-child{border-right:none;border-bottom:none}
-.pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);pointer-events:none}
-.pillar:hover{background:color-mix(in srgb,var(--accent) 3%,transparent)}
-.pillar:hover::before{transform:scaleX(1)}
-.pillar-icon{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);margin-bottom:1.5rem;display:block;opacity:.7}
-.pillar-title{font-family:'Cinzel',serif;font-size:.88rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:1rem;text-transform:uppercase}
-.pillar-text{font-size:.92rem;font-weight:300;line-height:1.9;color:var(--dim);font-style:italic}
+    .hero{min-height:95vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;position:relative}
+    .hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,90vw);height:min(600px,90vw);border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.08) 0%,transparent 70%);pointer-events:none}
+    .hero-label{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--accent);text-transform:uppercase;margin-bottom:1.5rem}
+    .hero-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;letter-spacing:.2em;color:var(--accent);line-height:1;margin-bottom:.5rem}
+    .hero-sub{font-family:'Cinzel',serif;font-size:clamp(.48rem,1.5vw,.65rem);letter-spacing:.4em;color:var(--dim);text-transform:uppercase;margin-bottom:3rem}
+    .hero-statement{font-size:clamp(1rem,3vw,1.5rem);font-weight:300;font-style:italic;line-height:1.8;color:var(--white);max-width:640px}
+    .hero-rule{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);margin:3rem auto 0}
 
-.portal-wrap{max-width:960px;margin:0 auto;padding:0 2rem 8rem;width:100%}
-#portalGate{border:.5px solid color-mix(in srgb,var(--accent) 25%,transparent);padding:4rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
-#portalGate::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
-.gate-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem}
-.gate-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2.5rem;line-height:1.75}
-#authMount{display:flex;justify-content:center;width:100%}
+    .section-divider{display:flex;align-items:center;gap:1.5rem;padding:0 2rem;margin:5rem auto;max-width:900px;width:100%}
+    .section-divider::before,.section-divider::after{content:'';flex:1;height:.5px;background:linear-gradient(to right,transparent,var(--accent) 40%,transparent)}
+    .section-divider span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--accent);white-space:nowrap}
 
-.request-note{max-width:420px;margin:2rem auto 0;text-align:center}
-.request-note p{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);line-height:1.85}
-.request-note a{color:var(--accent);text-decoration:none;border-bottom:.5px solid color-mix(in srgb,var(--accent) 35%,transparent);transition:border-color .25s;white-space:nowrap}
-.request-note a:hover{border-color:var(--accent)}
+    .pillars{padding:0 2rem;max-width:1100px;margin:0 auto;width:100%}
+    .pillars-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:.5px solid rgba(200,169,110,.2)}
+    .pillar{padding:3rem 2rem;border-right:.5px solid rgba(200,169,110,.12);position:relative;overflow:hidden;transition:background .4s}
+    .pillar:last-child{border-right:none}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform .5s}
+    .pillar:hover{background:rgba(200,169,110,.03)}
+    .pillar:hover::before{transform:scaleX(1)}
+    .pillar-icon{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);margin-bottom:1.5rem;display:block;opacity:.7}
+    .pillar-title{font-family:'Cinzel',serif;font-size:.88rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:1rem;text-transform:uppercase}
+    .pillar-text{font-size:.92rem;font-weight:300;line-height:1.9;color:var(--dim);font-style:italic}
 
-#portalRedirect{display:none;border:.5px solid color-mix(in srgb,var(--accent) 25%,transparent);padding:3.5rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
-#portalRedirect::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
-#portalRedirect.show{display:block}
-.redirect-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
-.redirect-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:.5rem}
-.redirect-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2rem;line-height:1.7}
-.redirect-btn{display:inline-block;background:transparent;border:.5px solid var(--accent);color:var(--accent);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.38em;padding:1rem 2rem;cursor:pointer;text-transform:uppercase;transition:background .25s,color .25s;text-decoration:none}
-.redirect-btn:hover{background:var(--accent);color:var(--bg)}
-.redirect-rule{width:1px;height:32px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--accent) 30%,transparent),transparent);margin:1.8rem auto 0}
+    .portal-wrap{max-width:960px;margin:0 auto;padding:0 2rem 8rem;width:100%}
+    #portalGate{border:.5px solid rgba(200,169,110,.25);padding:4rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
+    #portalGate::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
+    .gate-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem}
+    .gate-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2.5rem;line-height:1.75}
 
-footer{border-top:.5px solid color-mix(in srgb,var(--accent) 15%,transparent);padding:2.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.2rem;margin-top:auto}
-.footer-back{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .3s}
-.footer-back:hover{color:var(--accent)}
-.footer-links{display:flex;align-items:center;gap:.9rem;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase}
-.footer-links a{color:var(--dim);text-decoration:none;transition:color .3s}
-.footer-links a:hover{color:var(--accent)}
-.footer-links span{color:color-mix(in srgb,var(--dim) 40%,transparent)}
-.footer-copy{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.15em;color:color-mix(in srgb,var(--dim) 35%,transparent)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
+    #portalRedirect{display:none;border:.5px solid rgba(200,169,110,.25);padding:3.5rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
+    #portalRedirect.show{display:block}
+    .redirect-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
+    .redirect-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:.5rem}
+    .redirect-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2rem;line-height:1.7}
+    .redirect-btn{display:inline-block;background:transparent;border:.5px solid var(--accent);color:var(--accent);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.38em;padding:1rem 2rem;cursor:pointer;text-transform:uppercase;transition:background .25s,color .25s;text-decoration:none}
+    .redirect-btn:hover{background:var(--accent);color:var(--bg)}
 
-.scramble-word{display:inline-block;white-space:nowrap}
-.scramble-char{display:inline-block;will-change:contents}
+    footer{border-top:.5px solid rgba(200,169,110,.15);padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;margin-top:auto;text-align:center}
+    .footer-links{display:flex;align-items:center;justify-content:center;gap:.9rem;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase}
+    .footer-links a{color:var(--dim);text-decoration:none;transition:color .3s}
+    .footer-links a:hover{color:var(--accent)}
+    .footer-copy{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.15em;color:rgba(136,136,128,.35)}
 
-@media(max-width:600px){
-  nav{padding:1.2rem}
-  .nav-tag{display:none}
-  .pillars{padding:0 1.2rem}
-  .pillars-grid{grid-template-columns:1fr}
-  .pillar,.pillar:first-child,.pillar:nth-child(2){grid-column:1;border-right:none;border-bottom:.5px solid color-mix(in srgb,var(--accent) 12%,transparent)}
-  .pillar:last-child{border-bottom:none}
-  #portalGate,#portalRedirect{max-width:100%;padding:2rem 1.2rem;border-left:none;border-right:none}
-  footer{flex-direction:column;text-align:center;padding:2rem 1.2rem}
-}
-@media(min-width:601px) and (max-width:900px){
-  .pillars-grid{grid-template-columns:1fr}
-  .pillar,.pillar:first-child,.pillar:nth-child(2){grid-column:1;border-right:none;border-bottom:.5px solid color-mix(in srgb,var(--accent) 12%,transparent)}
-  .pillar:last-child{border-bottom:none}
-}
+    @media(max-width:600px){
+      nav{padding:1.2rem}.nav-tag{display:none}
+      .pillars-grid{grid-template-columns:1fr}
+      .pillar{border-right:none;border-bottom:.5px solid rgba(200,169,110,.12)}.pillar:last-child{border-bottom:none}
+      #portalGate,#portalRedirect{max-width:100%;padding:2rem 1.2rem}
+    }
   </style>
 </head>
 <body>
 <div class="page">
 
+  <!-- Divisions Switcher Bar -->
+  <div class="div-bar">
+    <span class="div-brand">LVO Holdings</span>
+    <div class="div-links">
+      <a href="/ops" class="div-link">Division 01 · Ops (GRO EHR)</a>
+      <a href="/vindex" class="div-link active">Division 02 · Vindex (Assets)</a>
+      <a href="/" class="div-link">Division 03 · Alliance</a>
+    </div>
+  </div>
+
   <nav>
     <div class="nav-left">
-      <a class="nav-parent" href="https://wearelvo.com" data-scramble>← LVO Holdings</a>
-      <a class="nav-mark" href="#">LVO Vindex</a>
+      <a class="nav-parent" href="/">← LVO Holdings</a>
+      <a class="nav-mark" href="/vindex">LVO Vindex</a>
     </div>
     <div class="nav-right">
-      <span class="nav-tag" data-scramble>Real Estate Division</span>
+      <span class="nav-tag">Real Estate &amp; Asset Management Division</span>
       <div id="navUserBtn">
-        <a class="nav-dash-link" id="navDashLink" href="https://dashboard.vindex.wearelvo.com/">→ Dashboard</a>
+        <a class="nav-dash-link" id="navDashLink" href="/vindex/dashboard">→ Vindex Dashboard</a>
         <div id="userChip" class="user-chip">
           <img class="user-chip-avatar" id="userChipAvatar" style="display:none"/>
           <span class="user-chip-email" id="userChipEmail"></span>
@@ -143,137 +132,70 @@ footer{border-top:.5px solid color-mix(in srgb,var(--accent) 15%,transparent);pa
   </nav>
 
   <section class="hero">
-    <p class="hero-label" data-scramble>LVO Holdings · Division 01</p>
-    <h1 class="hero-title" data-scramble>Vindex</h1>
-    <p class="hero-sub" data-scramble>Real Estate · Acquisition · Development</p>
-    <p class="hero-statement" data-scramble-block>Every property is a position.<br/>Every position is permanent.</p>
+    <p class="hero-label">LVO Holdings · Division 02</p>
+    <h1 class="hero-title">Vindex</h1>
+    <p class="hero-sub">Real Estate · Physical Assets · Advisory</p>
+    <p class="hero-statement">Tangible wealth preservation. Direct property portfolio acquisition and institutional asset governance for the LVO orbit.</p>
     <div class="hero-rule"></div>
   </section>
 
-  <div class="section-divider reveal"><span data-scramble>What We Do</span></div>
+  <div class="section-divider"><span>Asset Capabilities</span></div>
   <section class="pillars">
     <div class="pillars-grid">
-      <div class="pillar reveal">
-        <span class="pillar-icon" data-scramble>Acquisition</span>
-        <p class="pillar-title" data-scramble>Property Acquisition</p>
-        <p class="pillar-text" data-scramble-block>Strategic identification and acquisition of residential and commercial properties. We move on value, not emotion.</p>
+      <div class="pillar">
+        <span class="pillar-icon">Real Estate</span>
+        <p class="pillar-title">Direct Property Holdings</p>
+        <p class="pillar-text">Prime commercial and single-tenant assets acquired with long-term capital preservation focus.</p>
       </div>
-      <div class="pillar reveal" style="transition-delay:.15s">
-        <span class="pillar-icon" data-scramble>Development</span>
-        <p class="pillar-title" data-scramble>Asset Development</p>
-        <p class="pillar-text" data-scramble-block>Converting underperforming assets into revenue-generating holdings. Every dollar is deployed with purpose.</p>
+      <div class="pillar">
+        <span class="pillar-icon">Portfolio Intel</span>
+        <p class="pillar-title">Asset Governance</p>
+        <p class="pillar-text">Disciplined yield tracking, capitalization analysis, and lifecycle asset security.</p>
       </div>
-      <div class="pillar reveal" style="transition-delay:.3s">
-        <span class="pillar-icon" data-scramble>Legacy</span>
-        <p class="pillar-title" data-scramble>Generational Holdings</p>
-        <p class="pillar-text" data-scramble-block>Properties held under the LVO Family Legacy Trust. Built to outlast us. Positioned to grow beyond us.</p>
+      <div class="pillar">
+        <span class="pillar-icon">Advisory</span>
+        <p class="pillar-title">Strategic Syndicate</p>
+        <p class="pillar-text">Private advisory for family principals, legal counsel, and select operating associates.</p>
       </div>
     </div>
   </section>
 
-  <div class="section-divider reveal"><span data-scramble>Member Portal</span></div>
-  <section class="portal-wrap reveal">
+  <div class="section-divider"><span>Vindex Portal</span></div>
+  <section class="portal-wrap">
+
     <div id="portalGate">
-      <p class="gate-title" data-scramble id="gateTitle">Vindex Portal Access</p>
-      <p class="gate-sub" id="gateSub">This portal is for accepted members only.<br/>Sign in below with your credentials.</p>
+      <p class="gate-title">Vindex Portal Access</p>
+      <p class="gate-sub">Access is restricted to accredited principals, associates, and asset managers.</p>
       <div id="authMount"></div>
     </div>
 
-    <div class="request-note">
-      <p>Not yet a member? Access to LVO Vindex is by invitation and review only. To request consideration, email <a href="mailto:join@wearelvo.com?subject=Requesting%20Access%20%E2%80%94%20Vindex">join@wearelvo.com</a>.</p>
+    <div id="portalRedirect">
+      <p class="redirect-title">Vindex Portal</p>
+      <p class="redirect-name" id="redirectName">—</p>
+      <p class="redirect-sub" id="redirectSub">Authenticated. Redirecting to Vindex Dashboard…</p>
+      <a class="redirect-btn" id="enterDashboardBtn" href="/vindex/dashboard">Enter Vindex Dashboard →</a>
     </div>
 
-    <div id="portalRedirect">
-      <p class="redirect-title" data-scramble>Vindex Portal</p>
-      <p class="redirect-name" id="redirectName">—</p>
-      <p class="redirect-sub" id="redirectSub">You're signed in. Redirecting to your dashboard…</p>
-      <a class="redirect-btn" id="enterDashboardBtn" href="https://dashboard.vindex.wearelvo.com/">Enter Dashboard →</a>
-      <div class="redirect-rule"></div>
-    </div>
   </section>
 
   <footer>
-    <a class="footer-back" href="https://wearelvo.com" data-scramble>← wearelvo.com</a>
     <div class="footer-links">
-      <a href="terms.html">Terms of Service</a>
+      <a href="/ops">Division 01 Ops</a>
       <span>·</span>
-      <a href="privacy.html">Privacy Policy</a>
+      <a href="/vindex">Division 02 Vindex</a>
+      <span>·</span>
+      <a href="/">Division 03 Alliance</a>
     </div>
-    <span class="footer-copy">&copy; 2026 LVO Holdings · All Rights Reserved</span>
+    <span class="footer-copy">&copy; 2026 LVO Holdings · Vindex Real Estate &amp; Asset Division</span>
   </footer>
+
 </div>
-
-<script>
-document.querySelectorAll('.reveal').forEach((r) => {
-  new IntersectionObserver((entries, o) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); o.unobserve(e.target); }
-    });
-  }, { threshold: .08 }).observe(r);
-});
-
-const RADIUS = 20, DURATION = 200, CHARS = 'LVOᛪ༙';
-
-function buildWordSpan(word) {
-  const span = document.createElement('span');
-  span.className = 'scramble-word';
-  for (const ch of word) {
-    const c = document.createElement('span');
-    c.className = 'scramble-char';
-    c.dataset.orig = ch;
-    c.textContent = ch;
-    span.appendChild(c);
-  }
-  return span;
-}
-function splitTextNode(node) {
-  const frag = document.createDocumentFragment();
-  node.textContent.split(/(\s+)/).forEach((part) => {
-    if (!part) return;
-    frag.appendChild(/^\s+$/.test(part) ? document.createTextNode(part) : buildWordSpan(part));
-  });
-  return frag;
-}
-document.querySelectorAll('[data-scramble], [data-scramble-block]').forEach((el) => {
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-  const nodes = [];
-  let n;
-  while ((n = walker.nextNode())) nodes.push(n);
-  nodes.forEach((tn) => tn.textContent.trim() && tn.parentNode.replaceChild(splitTextNode(tn), tn));
-});
-
-const timers = new Map();
-function scrambleChar(span) {
-  const orig = span.dataset.orig;
-  if (!orig) return;
-  if (timers.has(span)) clearInterval(timers.get(span));
-  const start = performance.now();
-  const id = setInterval(() => {
-    const t = performance.now() - start;
-    if (t < DURATION) span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-    else { span.textContent = orig; clearInterval(id); timers.delete(span); }
-  }, 33);
-  timers.set(span, id);
-}
-let raf = null;
-document.addEventListener('pointermove', (e) => {
-  if (raf) return;
-  raf = requestAnimationFrame(() => {
-    raf = null;
-    document.querySelectorAll('.scramble-char').forEach((span) => {
-      const r = span.getBoundingClientRect();
-      const dist = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
-      if (dist < RADIUS && Math.random() < (1 - dist / RADIUS) * 0.35) scrambleChar(span);
-    });
-  });
-});
-</script>
 
 <script src="assets/auth-client.js"></script>
 <script src="assets/auth-widget.js"></script>
 <script>
 (function () {
-  const DASHBOARD_URL = 'https://dashboard.vindex.wearelvo.com/';
+  const DASHBOARD_URL = '/vindex/dashboard';
   const gate = document.getElementById('portalGate');
   const redirect = document.getElementById('portalRedirect');
   const navUserBtn = document.getElementById('navUserBtn');
@@ -284,7 +206,7 @@ document.addEventListener('pointermove', (e) => {
   let autoRedirectTimer = null;
 
   function dashUrlWithToken() {
-    return DASHBOARD_URL + '?lvo_token=' + encodeURIComponent(LVOAuth.getToken());
+    return DASHBOARD_URL + '?lvo_token=' + encodeURIComponent(LVOAuth.getToken() || '');
   }
 
   function showGate() {
@@ -294,10 +216,6 @@ document.addEventListener('pointermove', (e) => {
     navUserBtn.classList.remove('show');
     LVOAuthWidget.mount(document.getElementById('authMount'), {
       division: 'Vindex',
-      // Invite-only: accounts are created by LVO Administration. If your
-      // auth-widget build supports a flag to hide its self-registration
-      // tab, pass it here too, e.g. allowSignup: false.
-      allowSignup: false,
       onAuthenticated: showSignedIn,
     });
   }
@@ -307,7 +225,7 @@ document.addEventListener('pointermove', (e) => {
     redirect.classList.add('show');
     navUserBtn.classList.add('show');
 
-    document.getElementById('redirectName').textContent = user.firstName || 'Member';
+    document.getElementById('redirectName').textContent = user.firstName || 'Principal';
     userChipEmail.textContent = user.email || '';
     if (user.avatar) { userChipAvatar.src = user.avatar; userChipAvatar.style.display = 'block'; }
     else { userChipAvatar.style.display = 'none'; }
@@ -317,7 +235,7 @@ document.addEventListener('pointermove', (e) => {
     document.getElementById('enterDashboardBtn').href = dashUrl;
 
     if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
-    autoRedirectTimer = setTimeout(() => { window.location.href = dashUrl; }, 1400);
+    autoRedirectTimer = setTimeout(() => { window.location.href = dashUrl; }, 1200);
   }
 
   userSignOutBtn.addEventListener('click', async () => {
@@ -327,7 +245,7 @@ document.addEventListener('pointermove', (e) => {
 
   (async () => {
     const user = await LVOAuth.session();
-    user ? showSignedIn(user) : showGate();
+    user && user.division === 'Vindex' ? showSignedIn(user) : showGate();
   })();
 })();
 </script>
