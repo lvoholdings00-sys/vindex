@@ -1,15 +1,29 @@
 /**
- * LVOAuth — thin client for the custom D1-backed auth on the worker.
- * Shared across Alliance / Vindex / Ops. Division is passed in per-call
- * by whichever site is using it (see LVOAuthWidget.mount({ division })).
+ * LVOAuth — client for LVO Cloud, the single sign-in system for every LVO site.
+ * Sign-in is username-or-email + password, then a 2-step code from an
+ * authenticator app (first sign-in walks the member through enrolling one).
+ * Shared across Alliance / Vindex / Ops (landing sites and dashboards).
+ *
+ * Auth lives on LVO Cloud (AUTH). Dashboard data (deals, announcements,
+ * members...) is still served by the data worker (WORKER) and receives the
+ * same Bearer token.
  */
 const LVOAuth = (function () {
-  const WORKER = 'https://lvo-worker.lvoholdings00.workers.dev';
-
+  const AUTH = 'https://lvo-cloud.cloud';
+  const WORKER = 'https://lvo-worker.lvoholdings00.workers.dev'; // dashboard data
   const STORAGE_KEY = 'lvo_token';
 
+  // Each site only ever signs in against its own division.
+  function currentDivision() {
+    const h = (location.hostname || '').toLowerCase();
+    if (h.includes('vindex')) return 'Vindex';
+    if (h.includes('alliance')) return 'Alliance';
+    if (h.split('.').includes('ops')) return 'Ops';
+    return '';
+  }
+
   function getToken() {
-    // Pick up a token handed off via ?lvo_token=... (e.g. landing page -> dashboard redirect)
+    // Pick up a token handed off via ?lvo_token=... (landing page -> dashboard redirect)
     try {
       const url = new URL(window.location.href);
       const fromUrl = url.searchParams.get('lvo_token');
@@ -19,71 +33,82 @@ const LVOAuth = (function () {
         window.history.replaceState({}, '', url.toString());
       }
     } catch (_) {}
-    return localStorage.getItem(STORAGE_KEY) || '';
+    try { return localStorage.getItem(STORAGE_KEY) || ''; } catch (_) { return ''; }
   }
 
   function setToken(token) {
-    if (token) localStorage.setItem(STORAGE_KEY, token);
+    try { if (token) localStorage.setItem(STORAGE_KEY, token); } catch (_) {}
   }
 
   function clearToken() {
-    localStorage.removeItem(STORAGE_KEY);
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
   }
 
-  async function request(path, opts = {}) {
+  async function call(base, path, opts = {}) {
     const token = getToken();
     const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
     if (token) headers['Authorization'] = 'Bearer ' + token;
-    const res = await fetch(WORKER + path, { ...opts, headers });
+    const res = await fetch(base + path, { ...opts, headers });
     let data = null;
     try { data = await res.json(); } catch (_) {}
     if (!res.ok) {
       const e = new Error((data && data.error) || `Request failed (${res.status})`);
       e.status = res.status;
       e.data = data;
+      e.code = data && data.code;
       throw e;
     }
     return data;
   }
 
-  async function signup({ firstName, lastName, username, email, password, division }) {
-    return request('/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify({ firstName, lastName, username, email, password, division }),
-    });
-  }
+  const authRequest = (path, opts) => call(AUTH, path, opts);
+  const request = (path, opts) => call(WORKER, path, opts);
 
+  // Step 1: identifier + password. Resolves to
+  //   { status: 'MFA_VERIFY_REQUIRED', userId }                     (already enrolled)
+  //   { status: 'MFA_SETUP_REQUIRED', userId, secret, otpUri }      (first sign-in)
   async function login({ identifier, password, division }) {
-    return request('/auth/login', {
+    return authRequest('/api/auth/login-step1', {
       method: 'POST',
-      body: JSON.stringify({ identifier, password, division }),
+      body: JSON.stringify({ identifier, password, division: division || currentDivision() }),
     });
   }
 
-  async function resend({ userId, purpose }) {
-    return request('/auth/resend', { method: 'POST', body: JSON.stringify({ userId, purpose }) });
-  }
-
-  async function verify({ userId, code, purpose }) {
-    const data = await request('/auth/verify', {
+  // Step 2 (enrolled): 6-digit code from the authenticator app.
+  async function verifyMfa({ userId, code, division }) {
+    const data = await authRequest('/api/auth/mfa-verify', {
       method: 'POST',
-      body: JSON.stringify({ userId, code, purpose }),
+      body: JSON.stringify({ userId, code, division: division || currentDivision() }),
     });
     if (data && data.token) setToken(data.token);
     return data;
   }
 
+  // Step 2 (first sign-in): confirm the code from the newly scanned authenticator.
+  async function confirmMfaSetup({ userId, code, division }) {
+    const data = await authRequest('/api/auth/mfa-confirm-setup', {
+      method: 'POST',
+      body: JSON.stringify({ userId, code, division: division || currentDivision() }),
+    });
+    if (data && data.token) setToken(data.token);
+    return data;
+  }
+
+  // The signed-in member, scoped to this site's division (division / tier / role
+  // come from their grant). null if signed out or without access to this division.
   async function session() {
+    if (!getToken()) return null;
+    const div = currentDivision();
     try {
-      const data = await request('/auth/session', { method: 'GET' });
-      return data.user;
+      const data = await authRequest('/api/auth/me' + (div ? '?division=' + encodeURIComponent(div) : ''), { method: 'GET' });
+      return data && data.authenticated ? data.user : null;
     } catch (_) {
       return null;
     }
   }
 
   async function logout() {
-    try { await request('/auth/logout', { method: 'POST' }); } catch (_) {}
+    try { await authRequest('/api/auth/logout', { method: 'POST' }); } catch (_) {}
     clearToken();
   }
 
@@ -105,15 +130,16 @@ const LVOAuth = (function () {
     getToken,
     setToken,
     clearToken,
-    signup,
     login,
-    resend,
-    verify,
+    verifyMfa,
+    confirmMfaSetup,
     session,
     logout,
     updateProfile,
     myDeals,
-    _request: request, // exposed for dashboard.html to reuse (WORKER-authed fetches)
+    currentDivision,
+    _request: request, // dashboard data calls (Bearer-authed)
     WORKER,
+    AUTH,
   };
 })();

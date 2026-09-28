@@ -1,5 +1,6 @@
 /**
- * LVOAuthWidget — mounts a sign-in / 2FA / forgot-password form.
+ * LVOAuthWidget — mounts the LVO Cloud sign-in form: username/email + password,
+ * then a 2-step code from an authenticator app (with first-time enrollment).
  * Usage: LVOAuthWidget.mount(el, { division: 'Alliance', onAuthenticated: (user) => {} })
  * `division` is fixed per-site: the Alliance site always passes 'Alliance',
  * the Vindex site always passes 'Vindex', etc. That's what makes login
@@ -64,6 +65,15 @@ const LVOAuthWidget = (function () {
     container.appendChild(style);
   }
 
+  function loadQr(cb) {
+    if (window.QRCode) return cb(true);
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+    s.onload = () => cb(!!window.QRCode);
+    s.onerror = () => cb(false);
+    document.head.appendChild(s);
+  }
+
   function mount(container, { division = 'Alliance', onAuthenticated } = {}) {
     container.innerHTML = '';
     injectStyle(container);
@@ -71,7 +81,7 @@ const LVOAuthWidget = (function () {
     const wrap = h('div', { class: 'lvo-auth' });
     container.appendChild(wrap);
 
-    let pending = null; // { userId, email, purpose }
+    let pending = null; // { userId, mode: 'verify' | 'setup', secret, otpUri }
 
     function setError(msg) {
       const e = wrap.querySelector('.lvo-err');
@@ -90,6 +100,13 @@ const LVOAuthWidget = (function () {
       return input ? input.value.trim() : '';
     }
 
+    function errText(e) {
+      if (e.code === 'WRONG_DIVISION') {
+        return 'This account doesn\u2019t have access to this division. Contact LVO Administration.';
+      }
+      return (e.data && e.data.error) || e.message;
+    }
+
     function renderAuthForm() {
       pending = null;
       wrap.innerHTML = '';
@@ -100,14 +117,10 @@ const LVOAuthWidget = (function () {
         doLogin();
       });
 
-      form.appendChild(fieldEl('identifier', 'Email or Username', 'text', { autocomplete: 'username' }));
+      form.appendChild(fieldEl('identifier', 'Username or Email', 'text', { autocomplete: 'username' }));
       form.appendChild(fieldEl('password', 'Password', 'password', { autocomplete: 'current-password' }));
       form.appendChild(h('div', { class: 'lvo-err' }));
-      form.appendChild(h('button', {
-        class: 'lvo-btn',
-        type: 'submit',
-        text: 'Sign In →',
-      }));
+      form.appendChild(h('button', { class: 'lvo-btn', type: 'submit', text: 'Sign In \u2192' }));
       wrap.appendChild(form);
 
       wrap.appendChild(h('button', {
@@ -119,8 +132,8 @@ const LVOAuthWidget = (function () {
 
       wrap.appendChild(h('a', {
         class: 'lvo-request',
-        href: `mailto:${REQUEST_EMAIL}?subject=${encodeURIComponent('Requesting Access — ' + division)}`,
-        text: 'Not a Member? Request Access →',
+        href: `mailto:${REQUEST_EMAIL}?subject=${encodeURIComponent('Requesting Access \u2014 ' + division)}`,
+        text: 'Not a Member? Request Access \u2192',
       }));
     }
 
@@ -130,15 +143,11 @@ const LVOAuthWidget = (function () {
         class: 'lvo-msg',
         text: 'Password resets aren\u2019t self-service. Email LVO Administration from your registered address and we\u2019ll verify you and restore access.',
       }));
-      wrap.appendChild(h('a', {
-        class: 'lvo-recovery-email',
-        href: `mailto:${RECOVERY_EMAIL}`,
-        text: RECOVERY_EMAIL,
-      }));
+      wrap.appendChild(h('a', { class: 'lvo-recovery-email', href: `mailto:${RECOVERY_EMAIL}`, text: RECOVERY_EMAIL }));
       wrap.appendChild(h('a', {
         class: 'lvo-btn',
-        href: `mailto:${RECOVERY_EMAIL}?subject=${encodeURIComponent('Account Recovery — ' + division)}`,
-        text: 'Email Account Recovery →',
+        href: `mailto:${RECOVERY_EMAIL}?subject=${encodeURIComponent('Account Recovery \u2014 ' + division)}`,
+        text: 'Email Account Recovery \u2192',
       }));
       wrap.appendChild(h('button', { class: 'lvo-back', type: 'button', text: '\u2190 Back to Sign In', onClick: renderAuthForm }));
     }
@@ -146,61 +155,78 @@ const LVOAuthWidget = (function () {
     async function doLogin() {
       setError('');
       const identifier = val('identifier'), password = val('password');
-      if (!identifier || !password) return setError('Email/username and password required.');
+      if (!identifier || !password) return setError('Username/email and password required.');
       const btn = wrap.querySelector('.lvo-btn');
       btn.disabled = true;
       try {
         const data = await LVOAuth.login({ identifier, password, division });
-        pending = { userId: data.userId, email: data.email, purpose: 'login' };
+        pending = {
+          userId: data.userId,
+          mode: data.status === 'MFA_SETUP_REQUIRED' ? 'setup' : 'verify',
+          secret: data.secret,
+          otpUri: data.otpUri,
+        };
         renderCodeForm();
       } catch (e) {
-        setError((e.data && e.data.error) || e.message);
+        setError(errText(e));
         btn.disabled = false;
       }
     }
 
     function renderCodeForm() {
       wrap.innerHTML = '';
+      const setup = pending.mode === 'setup';
+
       wrap.appendChild(h('div', {
         class: 'lvo-msg',
-        text: `A 6-digit code was sent to ${pending.email}. Enter it below to continue.`,
+        text: setup
+          ? 'Set up 2-step verification. Scan this QR code with your authenticator app (Google Authenticator, Authy, Apple Passwords), then enter the 6-digit code it shows.'
+          : 'Enter the 6-digit code from your authenticator app.',
       }));
+
+      if (setup) {
+        const qr = h('div', { style: 'display:flex;justify-content:center;margin:0 0 .8rem;background:#fff;padding:10px;width:fit-content;margin-left:auto;margin-right:auto' });
+        wrap.appendChild(qr);
+        loadQr((ok) => {
+          if (ok && pending && pending.otpUri) {
+            new window.QRCode(qr, { text: pending.otpUri, width: 160, height: 160, correctLevel: window.QRCode.CorrectLevel.M });
+          } else {
+            qr.remove();
+          }
+        });
+        wrap.appendChild(h('div', { class: 'lvo-msg', text: 'Can\u2019t scan? Enter this key manually:' }));
+        wrap.appendChild(h('div', { class: 'lvo-recovery-email', text: pending.secret || '' }));
+      }
+
       const form = h('form');
-      form.addEventListener('submit', (e) => { e.preventDefault(); doVerify(); });
-      form.appendChild(fieldEl('code', 'Verification Code', 'text', {
+      form.addEventListener('submit', (e) => { e.preventDefault(); doCode(); });
+      form.appendChild(fieldEl('code', 'Authenticator Code', 'text', {
         maxlength: '6',
         inputmode: 'numeric',
         autocomplete: 'one-time-code',
         class: 'lvo-code-input',
       }));
       form.appendChild(h('div', { class: 'lvo-err' }));
-      form.appendChild(h('button', { class: 'lvo-btn', type: 'submit', text: 'Verify →' }));
+      form.appendChild(h('button', { class: 'lvo-btn', type: 'submit', text: setup ? 'Activate & Sign In \u2192' : 'Verify \u2192' }));
       wrap.appendChild(form);
-      wrap.appendChild(h('button', { class: 'lvo-resend', type: 'button', text: 'Resend Code', onClick: doResend }));
-      wrap.appendChild(h('button', { class: 'lvo-back', type: 'button', text: '← Back', onClick: renderAuthForm }));
+      wrap.appendChild(h('button', { class: 'lvo-back', type: 'button', text: '\u2190 Back', onClick: renderAuthForm }));
     }
 
-    async function doVerify() {
+    async function doCode() {
       setError('');
       const code = val('code');
-      if (!code) return setError('Enter the code.');
+      if (!/^\d{6}$/.test(code)) return setError('Enter the 6-digit code.');
       const btn = wrap.querySelector('.lvo-btn');
       btn.disabled = true;
       try {
-        const data = await LVOAuth.verify({ userId: pending.userId, code, purpose: pending.purpose });
+        const args = { userId: pending.userId, code, division };
+        const data = pending.mode === 'setup'
+          ? await LVOAuth.confirmMfaSetup(args)
+          : await LVOAuth.verifyMfa(args);
         if (onAuthenticated) onAuthenticated(data.user);
       } catch (e) {
-        setError((e.data && e.data.error) || e.message);
+        setError(errText(e));
         btn.disabled = false;
-      }
-    }
-
-    async function doResend() {
-      try {
-        await LVOAuth.resend({ userId: pending.userId, purpose: pending.purpose });
-        setError('Code resent.');
-      } catch (_) {
-        setError('Failed to resend code.');
       }
     }
 
