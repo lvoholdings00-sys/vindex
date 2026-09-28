@@ -107,21 +107,21 @@
   <div class="div-bar">
     <span class="div-brand">LVO Holdings</span>
     <div class="div-links">
-      <a href="/ops" class="div-link">Division 01 · Ops (GRO EHR)</a>
-      <a href="/vindex" class="div-link active">Division 02 · Vindex (Assets)</a>
-      <a href="/" class="div-link">Division 03 · Alliance</a>
+      <a href="https://vindex.wearelvo.com" class="div-link active">Division 02 · Vindex (Assets)</a>
+      <a href="https://alliance.wearelvo.com" class="div-link">Division 03 · Alliance</a>
+      <a href="https://ops.wearelvo.com" class="div-link">Division 01 · Ops (GRO EHR)</a>
     </div>
   </div>
 
   <nav>
     <div class="nav-left">
-      <a class="nav-parent" href="/">← LVO Holdings</a>
-      <a class="nav-mark" href="/vindex">LVO Vindex</a>
+      <a class="nav-parent" href="https://wearelvo.com">← LVO Holdings</a>
+      <a class="nav-mark" href="/">LVO Vindex</a>
     </div>
     <div class="nav-right">
       <span class="nav-tag">Real Estate &amp; Asset Management Division</span>
       <div id="navUserBtn">
-        <a class="nav-dash-link" id="navDashLink" href="/vindex/dashboard">→ Vindex Dashboard</a>
+        <a class="nav-dash-link" id="navDashLink" href="https://dashboard.vindex.wearelvo.com">→ Vindex Dashboard</a>
         <div id="userChip" class="user-chip">
           <img class="user-chip-avatar" id="userChipAvatar" style="display:none"/>
           <span class="user-chip-email" id="userChipEmail"></span>
@@ -173,18 +173,18 @@
       <p class="redirect-title">Vindex Portal</p>
       <p class="redirect-name" id="redirectName">—</p>
       <p class="redirect-sub" id="redirectSub">Authenticated. Redirecting to Vindex Dashboard…</p>
-      <a class="redirect-btn" id="enterDashboardBtn" href="/vindex/dashboard">Enter Vindex Dashboard →</a>
+      <a class="redirect-btn" id="enterDashboardBtn" href="https://dashboard.vindex.wearelvo.com">Enter Vindex Dashboard →</a>
     </div>
 
   </section>
 
   <footer>
     <div class="footer-links">
-      <a href="/ops">Division 01 Ops</a>
+      <a href="https://vindex.wearelvo.com">Division 02 Vindex</a>
       <span>·</span>
-      <a href="/vindex">Division 02 Vindex</a>
+      <a href="https://alliance.wearelvo.com">Division 03 Alliance</a>
       <span>·</span>
-      <a href="/">Division 03 Alliance</a>
+      <a href="https://ops.wearelvo.com">Division 01 Ops</a>
     </div>
     <span class="footer-copy">&copy; 2026 LVO Holdings · Vindex Real Estate &amp; Asset Division</span>
   </footer>
@@ -195,7 +195,7 @@
 <script src="assets/auth-widget.js"></script>
 <script>
 (function () {
-  const DASHBOARD_URL = '/vindex/dashboard';
+  const DASHBOARD_URL = 'https://dashboard.vindex.wearelvo.com';
   const gate = document.getElementById('portalGate');
   const redirect = document.getElementById('portalRedirect');
   const navUserBtn = document.getElementById('navUserBtn');
