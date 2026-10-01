@@ -26,6 +26,17 @@ const LVOAuth = (function () {
     // Pick up a token handed off via ?lvo_token=... (landing page -> dashboard redirect)
     try {
       const url = new URL(window.location.href);
+      // Preferred handoff: URL fragment (#lvo_token=...). Fragments are never sent
+      // to servers or in Referer headers, unlike a query string.
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+      const fromHash = hashParams.get('lvo_token');
+      if (fromHash) {
+        localStorage.setItem(STORAGE_KEY, fromHash);
+        // Remove only the token; leave any other fragment (e.g. a hash route) untouched.
+        url.hash = window.location.hash.replace(/^#/, '').replace(/(^|&)lvo_token=[^&]*/, '').replace(/^&/, '');
+        window.history.replaceState({}, '', url.toString());
+      }
+      // Legacy query-string handoff, still accepted so old links keep working.
       const fromUrl = url.searchParams.get('lvo_token');
       if (fromUrl) {
         localStorage.setItem(STORAGE_KEY, fromUrl);
