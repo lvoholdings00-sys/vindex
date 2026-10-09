@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>LVO Vindex · Real Estate & Asset Management</title>
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#000000">
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
@@ -98,6 +102,60 @@
       .pillar{border-right:none;border-bottom:.5px solid rgba(200,169,110,.12)}.pillar:last-child{border-bottom:none}
       #portalGate,#portalRedirect{max-width:100%;padding:2rem 1.2rem}
     }
+
+    /* ---------- mobile menu + mobile polish ---------- */
+    .menu-btn{display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:44px;height:44px;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .menu-btn span{display:block;width:22px;height:1.5px;background:#fff;transition:transform .35s ease,opacity .25s ease}
+    .menu-btn.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+    .menu-btn.open span:nth-child(2){opacity:0}
+    .menu-btn.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+    .menu-btn:focus-visible{outline:1px solid var(--accent);outline-offset:-4px}
+    #siteMenu{position:fixed;inset:0;z-index:205;display:none;flex-direction:column;align-items:center;justify-content:safe center;gap:1.4rem;padding:calc(env(safe-area-inset-top,0px) + 72px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);background:rgba(0,0,0,.97);overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility 0s linear .35s}
+    #siteMenu.open{opacity:1;visibility:visible;transition:opacity .35s ease,visibility 0s}
+    #siteMenu ul{list-style:none;display:flex;flex-direction:column;align-items:center;gap:.1rem}
+    #siteMenu li a{display:block;padding:12px 28px;color:var(--white);text-decoration:none;text-align:center;font-family:'Cinzel',serif;font-weight:600;font-size:clamp(18px,5.2vw,26px);letter-spacing:.16em;text-transform:uppercase;line-height:1.2;transition:color .25s}
+    #siteMenu li a:hover,#siteMenu li a:focus-visible,#siteMenu li a.active{color:var(--accent);outline:none}
+    #siteMenu li:first-child{margin-bottom:.8rem;padding-bottom:.8rem;border-bottom:.5px solid rgba(255,255,255,.18)}
+    #siteMenu .menu-legal{display:flex;gap:1.6rem}
+    #siteMenu .menu-legal a{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;padding:10px 0}
+    @media(max-width:768px){
+      .menu-btn{display:flex}
+      #siteMenu{display:flex}
+      .div-bar{height:48px;padding:0 .4rem 0 1.2rem;padding-top:env(safe-area-inset-top,0px);height:calc(48px + env(safe-area-inset-top,0px))}
+      .div-links{display:none}
+      .div-brand{font-size:.62rem}
+      nav{top:calc(48px + env(safe-area-inset-top,0px));padding:1rem 1.2rem;background:rgba(5,5,5,.96)}
+      .nav-parent{font-size:.62rem;padding:6px 0}
+      .nav-mark{font-size:1rem}
+      .nav-dash-link,.user-signout{font-size:.58rem;min-height:40px;display:inline-flex;align-items:center}
+      .user-chip-email{display:none}
+      #navUserBtn{gap:.6rem}
+      .hero{padding:9rem 1.4rem 3rem;min-height:85vh}
+      .hero-label{font-size:.62rem;letter-spacing:.4em}
+      .hero-sub{font-size:.62rem;letter-spacing:.3em;margin-bottom:2rem}
+      .hero-statement{font-size:1.1rem;line-height:1.7}
+      .section-divider{margin:3.5rem auto;padding:0 1.2rem;gap:1rem}
+      .section-divider span{font-size:.6rem;letter-spacing:.3em}
+      .pillar{padding:2rem 1.4rem}
+      .pillar-icon{font-size:.6rem}.pillar-title{font-size:.95rem}.pillar-text{font-size:1rem}
+      .gate-title,.redirect-title{font-size:.7rem}
+      .gate-sub,.redirect-sub{font-size:1rem}
+      .redirect-btn{font-size:.62rem;padding:1rem 1.4rem;min-height:48px}
+      .portal-wrap{padding:0 1rem 5rem}
+      footer{padding:2rem 1.2rem calc(2rem + env(safe-area-inset-bottom,0px))}
+      .footer-links{flex-wrap:wrap;font-size:.62rem;gap:.4rem 1.1rem}
+      .footer-links a,.footer-back{padding:10px 0;display:inline-block}
+      .footer-copy{font-size:.58rem;line-height:1.7}
+      #authMount .lvo-auth{max-width:100%;margin:0 auto}
+      #authMount .lvo-auth-tab{font-size:.62rem;padding:.9rem 0;min-height:44px}
+      #authMount .lvo-field label{font-size:.58rem}
+      #authMount .lvo-field input{font-size:16px;padding:.8rem}
+      #authMount .lvo-btn{font-size:.64rem;padding:1rem;min-height:48px}
+      #authMount .lvo-resend,#authMount .lvo-back,#authMount .lvo-forgot,#authMount .lvo-request{font-size:.58rem;padding:.8rem .4rem;min-height:44px}
+      #authMount .lvo-recovery-email{font-size:.62rem}
+    }
+    @media(max-width:360px){#authMount .lvo-row{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{transition:none}}
   </style>
 </head>
 <body>
@@ -110,8 +168,26 @@
       <a href="https://vindex.wearelvo.com" class="div-link active">Division 01 · Vindex</a>
       <a href="https://alliance.wearelvo.com" class="div-link">Division 02 · Alliance</a>
       <a href="https://operations.wearelvo.com" class="div-link">Division 03 · Operations</a>
+      <a href="https://wearelvo.com/careers/" class="div-link">Careers</a>
+      <a href="https://about.wearelvo.com/" class="div-link">About</a>
     </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu"><span></span><span></span><span></span></button>
   </div>
+
+  <nav id="siteMenu" aria-label="Main menu">
+    <ul>
+      <li><a href="https://wearelvo.com/">LVO Holdings</a></li>
+      <li><a href="https://vindex.wearelvo.com" class="active" aria-current="page">Vindex</a></li>
+      <li><a href="https://alliance.wearelvo.com">Alliance</a></li>
+      <li><a href="https://operations.wearelvo.com">Operations</a></li>
+      <li><a href="https://wearelvo.com/careers/">Careers</a></li>
+      <li><a href="https://about.wearelvo.com/">About</a></li>
+    </ul>
+    <div class="menu-legal">
+      <a href="https://privacy.wearelvo.com">Privacy</a>
+      <a href="https://tos.wearelvo.com">Terms</a>
+    </div>
+  </nav>
 
   <nav>
     <div class="nav-left">
@@ -180,11 +256,11 @@
 
   <footer>
     <div class="footer-links">
-      <a href="https://vindex.wearelvo.com">Division 01 Vindex</a>
+      <a href="https://wearelvo.com/">LVO Holdings</a>
       <span>·</span>
-      <a href="https://alliance.wearelvo.com">Division 02 Alliance</a>
+      <a href="https://privacy.wearelvo.com">Privacy</a>
       <span>·</span>
-      <a href="https://operations.wearelvo.com">Division 03 Operations</a>
+      <a href="https://tos.wearelvo.com">Terms</a>
     </div>
     <span class="footer-copy">&copy; 2026 LVO Holdings · Vindex Real Estate &amp; Asset Division</span>
   </footer>
@@ -251,5 +327,22 @@
 </script>
 
 <script src="https://lvo-cloud.cloud/assets/lvo-status.js" data-division="Vindex" defer></script>
+<script>
+(function(){
+  var btn=document.getElementById('menuBtn'),menu=document.getElementById('siteMenu');
+  if(!btn||!menu)return;
+  function set(open){
+    btn.classList.toggle('open',open);menu.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',String(open));
+    btn.setAttribute('aria-label',open?'Close menu':'Open menu');
+    document.body.style.overflow=open?'hidden':'';
+    if(open){var a=menu.querySelector('a');if(a)a.focus({preventScroll:true});}
+  }
+  btn.addEventListener('click',function(){set(!menu.classList.contains('open'));});
+  menu.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+  window.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open')){set(false);btn.focus();}});
+  window.addEventListener('resize',function(){if(window.innerWidth>768&&menu.classList.contains('open'))set(false);});
+})();
+</script>
 </body>
 </html>
