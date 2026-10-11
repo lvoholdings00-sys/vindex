@@ -18,7 +18,7 @@ const LVOAuth = (function () {
     const h = (location.hostname || '').toLowerCase();
     if (h.includes('vindex')) return 'Vindex';
     if (h.includes('alliance')) return 'Alliance';
-    if (h.split('.').includes('ops')) return 'Ops';
+    if (h.split('.').includes('ops') || h.split('.').includes('operations')) return 'Ops';
     return '';
   }
 
