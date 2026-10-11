@@ -2,347 +2,1970 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>LVO Vindex · Real Estate & Asset Management</title>
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>LVO Vindex · Dashboard</title>
+
+  <link rel="icon" type="image/png" href="/assets/logo.png"/>
+  <link rel="apple-touch-icon" href="/assets/logo.png"/>
+
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cormorant+SC:wght@300;400;500&display=swap" rel="stylesheet"/>
+
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    input,textarea,select{font-size:16px !important}
+
     :root{
-      --accent:#C8A96E;
-      --red:#8B0000;--red-hi:#CC2020;
-      --chrome:#C8C8D0;--white:#F0EEEC;
-      --dim:#888880;--bg:#000000;
-      --gold:#C8A96E;
+      --gold:#C8A96E;--gold-dim:rgba(200,169,110,.18);--gold-hi:rgba(200,169,110,.42);
+      --gold-glow:rgba(200,169,110,.06);--red-hi:#CC2020;
+      --bg:#000000;--bg2:#000000;--bg3:#000000;--amber:#F2A93B;
+      --chrome:#C8C8D0;--white:#F0EEEC;--dim:#6A6A64;--dim2:#888880;
+      --border:rgba(200,169,110,.14);--border-hi:rgba(200,169,110,.38);
+      --green:#22c55e;--sidebar:220px;--bottom-nav:56px;
     }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;cursor:default}
-    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.03;pointer-events:none;z-index:9999}
-    .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+    html,body{height:100%;overflow:hidden}
+    body{background:var(--bg);color:var(--white);font-family:'Cormorant Garamond',Georgia,serif;display:flex;flex-direction:column}
+    body::after{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.028;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
-    /* Divisions Bar */
-    .div-bar{height:28px;background:#050505;border-bottom:.5px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;position:fixed;top:0;left:0;right:0;z-index:210}
-    .div-links{display:flex;align-items:center;gap:1.5rem}
-    .div-link{color:var(--dim);text-decoration:none;transition:color .2s}
-    .div-link:hover{color:var(--white)}
-    .div-link.active{color:var(--accent);font-weight:600}
-    .div-brand{color:var(--dim);letter-spacing:.3em}
+    /* LOAD */
+    #loadScreen{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transition:opacity .6s ease}
+    #loadScreen.out{opacity:0;pointer-events:none}
+    .ls-rule{width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);animation:lsPulse 1.8s ease-in-out infinite}
+    @keyframes lsPulse{0%,100%{opacity:.3}50%{opacity:1}}
+    .ls-mark{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.6em;color:var(--gold);text-transform:uppercase}
+    .ls-name{font-family:'Cinzel',serif;font-size:2.8rem;font-weight:900;letter-spacing:.25em;color:var(--chrome);line-height:1}
+    .ls-sub{font-family:'Cormorant SC',serif;font-size:.48rem;letter-spacing:.5em;color:var(--dim2);text-transform:uppercase}
+    .ls-status{font-family:'Cinzel',serif;font-size:.38rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;min-height:1em}
+    .ls-bar{width:200px;height:1px;background:var(--border);overflow:hidden;position:relative}
+    .ls-bar-fill{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:lsBar 1.4s ease-in-out infinite}
+    @keyframes lsBar{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
 
-    nav{position:fixed;top:28px;left:0;right:0;z-index:200;padding:1.4rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,5,0.97) 0%,transparent 100%)}
-    .nav-left{display:flex;flex-direction:column;gap:0.2rem}
-    .nav-parent{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.35em;color:var(--accent);text-decoration:none;text-transform:uppercase;transition:color .3s}
-    .nav-parent:hover{color:var(--chrome)}
-    .nav-mark{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.3em;color:var(--accent);text-decoration:none}
-    .nav-right{display:flex;align-items:center;gap:1.5rem}
-    .nav-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
+    /* ERROR */
+    #errorScreen{position:fixed;inset:0;z-index:8999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem;text-align:center}
+    #errorScreen.show{display:flex}
+    .err-title{font-family:'Cinzel',serif;font-size:1.2rem;letter-spacing:.2em;color:var(--red-hi)}
+    .err-msg{font-size:.95rem;font-style:italic;color:var(--dim2);max-width:480px;line-height:1.8}
 
-    #navUserBtn{display:none;align-items:center;gap:1rem}
-    #navUserBtn.show{display:flex}
-    .nav-dash-link{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;color:var(--accent);text-decoration:none;text-transform:uppercase;border:.5px solid rgba(200,169,110,.35);padding:.35rem .75rem;transition:background .25s,border-color .25s}
-    .nav-dash-link:hover{background:rgba(200,169,110,.1);border-color:var(--accent)}
-    .user-chip{display:flex;align-items:center;gap:.8rem}
-    .user-chip-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:.5px solid rgba(200,169,110,.4)}
-    .user-chip-email{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.12em;color:var(--chrome);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .user-signout{background:none;border:.5px solid rgba(200,169,110,.3);color:var(--dim);font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.2em;padding:.4rem .75rem;cursor:pointer;text-transform:uppercase;transition:color .25s,border-color .25s}
-    .user-signout:hover{color:var(--accent);border-color:var(--accent)}
+    /* TOPBAR */
+    #topbar{height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;background:var(--bg);border-bottom:.5px solid var(--border);position:relative;z-index:100}
+    .tb-left{display:flex;align-items:center;gap:1.4rem}
+    .tb-mark{font-family:'Cinzel',serif;font-size:.78rem;font-weight:600;letter-spacing:.28em;color:var(--gold)}
+    .tb-divider{width:1px;height:18px;background:var(--border)}
+    .tb-crumb{font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.3em;color:var(--dim2);text-transform:uppercase}
+    .tb-right{display:flex;align-items:center;gap:1rem}
+    .tb-tier{font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.25em;color:var(--gold);border:.5px solid var(--border);padding:.22rem .6rem;text-transform:uppercase}
+    .tb-name{font-family:'Cinzel',serif;font-size:.42rem;letter-spacing:.2em;color:var(--dim2);text-transform:uppercase}
+    .tb-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:.5px solid rgba(200,169,110,.4)}
+    .tb-signout{background:none;border:.5px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:.38rem;letter-spacing:.2em;padding:.4rem .7rem;cursor:pointer;text-transform:uppercase;transition:color .2s,border-color .2s}
+    .tb-signout:hover{color:var(--gold);border-color:var(--gold)}
 
-    .hero{min-height:95vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;position:relative}
-    .hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,90vw);height:min(600px,90vw);border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.08) 0%,transparent 70%);pointer-events:none}
-    .hero-label{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--accent);text-transform:uppercase;margin-bottom:1.5rem}
-    .hero-title{font-family:'Cinzel',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;letter-spacing:.2em;color:var(--accent);line-height:1;margin-bottom:.5rem}
-    .hero-sub{font-family:'Cinzel',serif;font-size:clamp(.48rem,1.5vw,.65rem);letter-spacing:.4em;color:var(--dim);text-transform:uppercase;margin-bottom:3rem}
-    .hero-statement{font-size:clamp(1rem,3vw,1.5rem);font-weight:300;font-style:italic;line-height:1.8;color:var(--white);max-width:640px}
-    .hero-rule{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);margin:3rem auto 0}
+    /* SHELL */
+    #shell{flex:1;display:flex;overflow:hidden;position:relative;z-index:1}
 
-    .section-divider{display:flex;align-items:center;gap:1.5rem;padding:0 2rem;margin:5rem auto;max-width:900px;width:100%}
-    .section-divider::before,.section-divider::after{content:'';flex:1;height:.5px;background:linear-gradient(to right,transparent,var(--accent) 40%,transparent)}
-    .section-divider span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--accent);white-space:nowrap}
+    /* SIDEBAR */
+    #sidebar{width:var(--sidebar);flex-shrink:0;display:flex;flex-direction:column;background:var(--bg2);border-right:.5px solid var(--border);overflow-y:auto}
+    #sidebar::-webkit-scrollbar{width:2px}
+    #sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+    .sb-section{padding:1.4rem 1rem .4rem}
+    .sb-label{font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.45em;color:var(--dim);text-transform:uppercase;margin-bottom:.7rem;padding-left:.3rem}
+    .nav-item{display:flex;align-items:center;gap:.7rem;padding:.68rem .9rem;cursor:pointer;border-left:2px solid transparent;transition:all .2s;margin-bottom:1px}
+    .nav-item:hover{background:var(--gold-glow);border-left-color:rgba(200,169,110,.3)}
+    .nav-item.active{background:var(--gold-glow);border-left-color:var(--gold)}
+    .nav-ico{font-size:.7rem;opacity:.4;width:14px;flex-shrink:0;transition:opacity .2s}
+    .nav-item:hover .nav-ico,.nav-item.active .nav-ico{opacity:1}
+    .nav-lbl{font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.22em;color:var(--dim2);text-transform:uppercase;transition:color .2s}
+    .nav-item:hover .nav-lbl{color:var(--chrome)}
+    .nav-item.active .nav-lbl{color:var(--gold)}
+    .nav-badge{margin-left:auto;font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.12em;color:var(--gold);background:rgba(200,169,110,.1);border:.5px solid var(--border);padding:.12rem .38rem}
+    .sb-foot{margin-top:auto;padding:1rem;border-top:.5px solid var(--border)}
+    .sb-back{font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.25em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color .2s;display:block;padding:.4rem 0}
+    .sb-back:hover{color:var(--gold)}
+    .live-pip{display:flex;align-items:center;gap:.4rem;margin-top:.6rem}
+    .pip{width:4px;height:4px;border-radius:50%;background:var(--gold);animation:pipBlink 2.2s ease-in-out infinite}
+    @keyframes pipBlink{0%,100%{opacity:.25}50%{opacity:1}}
+    .pip-txt{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+    .sb-status{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;padding:.3rem 0;display:flex;align-items:center;gap:.4rem}
+    .sb-status.ok{color:var(--gold)}.sb-status.err{color:var(--red-hi)}
 
-    .pillars{padding:0 2rem;max-width:1100px;margin:0 auto;width:100%}
-    .pillars-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:.5px solid rgba(200,169,110,.2)}
-    .pillar{padding:3rem 2rem;border-right:.5px solid rgba(200,169,110,.12);position:relative;overflow:hidden;transition:background .4s}
-    .pillar:last-child{border-right:none}
-    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform .5s}
-    .pillar:hover{background:rgba(200,169,110,.03)}
-    .pillar:hover::before{transform:scaleX(1)}
-    .pillar-icon{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:var(--accent);margin-bottom:1.5rem;display:block;opacity:.7}
-    .pillar-title{font-family:'Cinzel',serif;font-size:.88rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:1rem;text-transform:uppercase}
-    .pillar-text{font-size:.92rem;font-weight:300;line-height:1.9;color:var(--dim);font-style:italic}
+    /* MOBILE BOTTOM NAV */
+    #bottomNav{display:none;position:fixed;bottom:0;left:0;right:0;padding-bottom:calc(env(safe-area-inset-bottom) + 100px);margin-bottom:-100px;background:rgba(0,0,0,.96);border-top:.5px solid var(--border);z-index:200;padding-left:.3rem;padding-right:.3rem}
+    .bn-inner{display:flex;align-items:stretch;height:var(--bottom-nav);overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0}
+    .bn-inner::-webkit-scrollbar{display:none}
+    .bn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.18rem;padding:.4rem .55rem;cursor:pointer;min-width:52px;flex:1;border-top:2px solid transparent;transition:all .18s;position:relative}
+    .bn-item.active{border-top-color:var(--gold)}
+    .bn-item.active .bn-ico{opacity:1;color:var(--gold)}
+    .bn-item.active .bn-lbl{color:var(--gold)}
+    .bn-ico{font-size:.72rem;opacity:.38;transition:all .18s;color:var(--chrome)}
+    .bn-lbl{font-family:'Cinzel',serif;font-size:.3rem;letter-spacing:.18em;color:var(--dim2);text-transform:uppercase;white-space:nowrap;transition:color .18s}
+    .bn-dot{position:absolute;top:.35rem;right:.35rem;width:5px;height:5px;border-radius:50%;background:var(--gold);display:none}
+    .bn-dot.show{display:block}
 
-    .portal-wrap{max-width:960px;margin:0 auto;padding:0 2rem 8rem;width:100%}
-    #portalGate{border:.5px solid rgba(200,169,110,.25);padding:4rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
-    #portalGate::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
-    .gate-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.8rem}
-    .gate-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2.5rem;line-height:1.75}
+    /* MAIN */
+    #main{flex:1;overflow-y:auto;padding:2.2rem 2.4rem 3rem;background:var(--bg)}
+    #main::-webkit-scrollbar{width:2px}
+    #main::-webkit-scrollbar-thumb{background:var(--border)}
 
+    /* PANELS */
+    .panel{display:none}.panel.active{display:block;animation:panelIn .3s cubic-bezier(.16,1,.3,1)}
+    @keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    #portalRedirect{display:none;border:.5px solid rgba(200,169,110,.25);padding:3.5rem 3rem;position:relative;text-align:center;max-width:480px;margin:0 auto}
-    #portalRedirect.show{display:block}
-    .redirect-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem}
-    .redirect-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;letter-spacing:.18em;color:var(--chrome);margin-bottom:.5rem}
-    .redirect-sub{font-size:.88rem;font-weight:300;font-style:italic;color:var(--dim);margin-bottom:2rem;line-height:1.7}
-    .redirect-btn{display:inline-block;background:transparent;border:.5px solid var(--accent);color:var(--accent);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.38em;padding:1rem 2rem;cursor:pointer;text-transform:uppercase;transition:background .25s,color .25s;text-decoration:none}
-    .redirect-btn:hover{background:var(--accent);color:var(--bg)}
+    .ph{margin-bottom:2rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem}
+    .ph-left .ph-eyebrow{font-family:'Cinzel',serif;font-size:.38rem;letter-spacing:.55em;color:var(--gold);text-transform:uppercase;margin-bottom:.35rem;opacity:.7}
+    .ph-left .ph-title{font-family:'Cinzel',serif;font-size:1.55rem;font-weight:900;letter-spacing:.12em;color:var(--chrome);line-height:1}
+    .ph-left .ph-sub{font-size:.92rem;font-weight:300;font-style:italic;color:var(--dim2);margin-top:.35rem}
+    .ph-rule{flex:1;height:.5px;background:linear-gradient(to right,var(--border-hi),transparent);margin-bottom:.4rem;min-width:40px}
 
-    footer{border-top:.5px solid rgba(200,169,110,.15);padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;margin-top:auto;text-align:center}
-    .footer-links{display:flex;align-items:center;justify-content:center;gap:.9rem;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase}
-    .footer-links a{color:var(--dim);text-decoration:none;transition:color .3s}
-    .footer-links a:hover{color:var(--accent)}
-    .footer-copy{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.15em;color:rgba(136,136,128,.35)}
+    .stat-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:2rem}
+    .sc{background:var(--bg2);padding:1.2rem 1.4rem;position:relative;overflow:hidden;transition:background .25s}
+    .sc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s}
+    .sc:hover{background:var(--gold-glow)}.sc:hover::after{transform:scaleX(1)}
+    .sc-lbl{font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;margin-bottom:.4rem}
+    .sc-val{font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;letter-spacing:.1em;color:var(--chrome)}
 
-    @media(max-width:600px){
-      nav{padding:1.2rem}.nav-tag{display:none}
-      .pillars-grid{grid-template-columns:1fr}
-      .pillar{border-right:none;border-bottom:.5px solid rgba(200,169,110,.12)}.pillar:last-child{border-bottom:none}
-      #portalGate,#portalRedirect{max-width:100%;padding:2rem 1.2rem}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+    .g-full{margin-bottom:1.2rem}
+
+    .card{background:var(--bg2);border:.5px solid var(--border);position:relative}
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .ch{padding:1rem 1.4rem;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+    .ct{font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase}
+    .cm{font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+    .cb{padding:1.2rem 1.4rem}
+    .empty{font-size:.88rem;font-style:italic;color:var(--dim);padding:1.2rem 0;text-align:center}
+
+    /* PROPERTY / DEAL */
+    .deal{padding:1.2rem 1.4rem;border-bottom:.5px solid var(--border);position:relative;transition:background .2s}
+    .deal:last-child{border-bottom:none}
+    .deal::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold);opacity:0;transition:opacity .2s;pointer-events:none}
+    .deal:hover{background:var(--gold-glow)}.deal:hover::before{opacity:1}
+    .deal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;gap:.8rem;flex-wrap:wrap}
+    .deal-name{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.14em;color:var(--chrome)}
+    .deal-st{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.18em;padding:.18rem .5rem;text-transform:uppercase}
+    .deal-st.active{color:#22c55e;border:.5px solid rgba(34,197,94,.28);background:rgba(34,197,94,.05)}
+    .deal-st.pending{color:var(--gold);border:.5px solid rgba(200,169,110,.28);background:rgba(200,169,110,.05)}
+    .deal-st.under-contract{color:#60a5fa;border:.5px solid rgba(96,165,250,.28);background:rgba(96,165,250,.05)}
+    .deal-st.closed{color:var(--dim);border:.5px solid rgba(100,100,95,.2)}
+    .deal-meta{display:flex;gap:1.4rem;flex-wrap:wrap}
+    .dm-lbl{font-family:'Cinzel',serif;font-size:.33rem;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;margin-bottom:.15rem}
+    .dm-val{font-size:.82rem;font-style:italic;color:var(--chrome)}
+    .deal-note{margin-top:.6rem;font-size:.8rem;font-style:italic;color:var(--dim2);line-height:1.6;border-top:.5px solid var(--border);padding-top:.55rem}
+    .prop-tag{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;border:.5px solid var(--border);color:var(--dim2);padding:.18rem .5rem;text-transform:uppercase;margin-right:.4rem}
+    .prop-tag.residential{color:var(--gold);border-color:rgba(200,169,110,.3)}
+    .prop-tag.commercial{color:#60a5fa;border-color:rgba(96,165,250,.3)}
+    .prop-tag.mixed{color:#a78bfa;border-color:rgba(167,139,250,.3)}
+
+    /* FINANCIALS */
+    .fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:1.2rem}
+    .fgc{background:var(--bg2);padding:1.1rem 1.3rem}
+    .fg-lbl{font-family:'Cinzel',serif;font-size:.35rem;letter-spacing:.38em;color:var(--dim);text-transform:uppercase;margin-bottom:.35rem}
+    .fg-val{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.1em;color:var(--chrome)}
+    .ft{width:100%;border-collapse:collapse}
+    .ft th{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;padding:.65rem 1rem;border-bottom:.5px solid var(--border);text-align:left;font-weight:400}
+    .ft td{padding:.85rem 1rem;border-bottom:.5px solid rgba(200,169,110,.05);font-size:.84rem;font-style:italic;color:var(--chrome)}
+    .ft tr:last-child td{border-bottom:none}
+    .ft tr:hover td{background:var(--gold-glow)}
+    .ft-lbl{font-family:'Cinzel',serif;font-size:.32rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;font-style:normal;display:block;margin-bottom:.18rem}
+
+    /* FIELD OPS */
+    .wo{padding:1.2rem 1.4rem;border-bottom:.5px solid var(--border);position:relative;transition:background .2s}
+    .wo:last-child{border-bottom:none}
+    .wo::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;opacity:0;transition:opacity .2s;pointer-events:none}
+    .wo.open::before{background:#ef4444;opacity:1}
+    .wo.in-progress::before{background:var(--gold);opacity:1}
+    .wo.scheduled::before{background:#60a5fa;opacity:1}
+    .wo.completed::before{background:#22c55e;opacity:.5}
+    .wo:hover{background:var(--gold-glow)}
+    .wo-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;gap:.8rem;flex-wrap:wrap}
+    .wo-id{font-family:'Cinzel',serif;font-size:.32rem;letter-spacing:.25em;color:var(--dim);margin-bottom:.18rem}
+    .wo-title{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.14em;color:var(--chrome)}
+    .wo-badges{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center}
+    .wo-badge{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.18em;padding:.18rem .5rem;text-transform:uppercase}
+    .wo-badge.open{color:#ef4444;border:.5px solid rgba(239,68,68,.28);background:rgba(239,68,68,.05)}
+    .wo-badge.in-progress{color:var(--gold);border:.5px solid rgba(200,169,110,.28);background:rgba(200,169,110,.05)}
+    .wo-badge.scheduled{color:#60a5fa;border:.5px solid rgba(96,165,250,.28);background:rgba(96,165,250,.05)}
+    .wo-badge.completed{color:#22c55e;border:.5px solid rgba(34,197,94,.28);background:rgba(34,197,94,.05)}
+    .wo-badge.urgent{color:#ef4444;border:.5px solid rgba(239,68,68,.2);font-size:.3rem}
+    .wo-badge.type{color:var(--dim2);border:.5px solid var(--border)}
+    .wo-meta{display:flex;gap:1.4rem;flex-wrap:wrap;margin-bottom:.35rem}
+    .wm-lbl{font-family:'Cinzel',serif;font-size:.33rem;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;margin-bottom:.15rem}
+    .wm-val{font-size:.82rem;font-style:italic;color:var(--chrome)}
+    .wo-note{font-size:.8rem;font-style:italic;color:var(--dim2);line-height:1.6;border-top:.5px solid var(--border);padding-top:.5rem;margin-top:.4rem}
+
+    /* VENDOR / INSPECTION */
+    .vendor-row{padding:1rem 1.4rem;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;transition:background .2s}
+    .vendor-row:last-child{border-bottom:none}
+    .vendor-row:hover{background:var(--gold-glow)}
+    .vn-name{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.14em;color:var(--chrome);margin-bottom:.15rem}
+    .vn-trade{font-family:'Cinzel',serif;font-size:.35rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:.2rem}
+    .vn-contact{font-size:.8rem;font-style:italic;color:var(--dim2)}
+    .vn-stars{display:flex;gap:2px;margin-bottom:.25rem;justify-content:flex-end}
+    .vn-star{width:7px;height:7px;background:var(--gold);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+    .vn-star.empty{background:rgba(200,169,110,.18)}
+    .vn-status-ok{font-family:'Cinzel',serif;font-size:.33rem;letter-spacing:.2em;color:#22c55e;text-transform:uppercase}
+    .vn-status-na{font-family:'Cinzel',serif;font-size:.33rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+    .insp-row{padding:1rem 1.4rem;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;transition:background .2s}
+    .insp-row:last-child{border-bottom:none}
+    .insp-row:hover{background:var(--gold-glow)}
+    .insp-prop{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.12em;color:var(--chrome);margin-bottom:.15rem}
+    .insp-type{font-family:'Cinzel',serif;font-size:.35rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:.18rem}
+    .insp-date{font-size:.8rem;font-style:italic;color:var(--dim2)}
+    .insp-badge{font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.2em;padding:.18rem .55rem;text-transform:uppercase}
+    .insp-badge.pass{color:#22c55e;border:.5px solid rgba(34,197,94,.28);background:rgba(34,197,94,.05)}
+    .insp-badge.attention{color:var(--gold);border:.5px solid rgba(200,169,110,.28);background:rgba(200,169,110,.05)}
+    .insp-badge.fail{color:#ef4444;border:.5px solid rgba(239,68,68,.28);background:rgba(239,68,68,.05)}
+    .insp-badge.upcoming{color:#60a5fa;border:.5px solid rgba(96,165,250,.28);background:rgba(96,165,250,.05)}
+
+    /* ANNOUNCEMENTS */
+    .ann{padding:1.2rem 1.4rem;border-bottom:.5px solid var(--border);transition:background .2s;position:relative}
+    .ann:last-child{border-bottom:none}
+    .ann:hover{background:var(--gold-glow)}
+    .ann.pinned{border-left:2px solid var(--gold);background:rgba(200,169,110,.03)}
+    .ann-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.55rem;gap:1rem;flex-wrap:wrap}
+    .ann-title{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.12em;color:var(--chrome)}
+    .ann-div{font-family:'Cinzel',serif;font-size:.33rem;letter-spacing:.2em;color:var(--gold);border:.5px solid var(--border);padding:.15rem .45rem;flex-shrink:0;text-transform:uppercase}
+    .ann-body{font-size:.88rem;font-style:italic;color:var(--dim2);line-height:1.75}
+    .ann-ft{display:flex;justify-content:space-between;margin-top:.6rem;padding-top:.5rem;border-top:.5px solid var(--border);flex-wrap:wrap;gap:.4rem;align-items:center}
+    .ann-author{font-family:'Cinzel',serif;font-size:.34rem;letter-spacing:.2em;color:var(--dim)}
+    .ann-time{font-family:'Cinzel',serif;font-size:.32rem;letter-spacing:.15em;color:var(--dim);opacity:.55}
+    .ann-pin-badge{font-family:'Cinzel',serif;font-size:.32rem;letter-spacing:.2em;color:var(--gold);opacity:.75}
+    .ann-actions{display:flex;gap:.5rem;align-items:center}
+    .ann-action-btn{background:none;border:.5px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:.32rem;letter-spacing:.15em;padding:.2rem .5rem;cursor:pointer;text-transform:uppercase;transition:all .2s}
+    .ann-action-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .ann-action-btn.del:hover{border-color:var(--red-hi);color:var(--red-hi)}
+    .fbar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+    .fb{background:transparent;border:.5px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.22em;padding:.42rem .75rem;cursor:pointer;text-transform:uppercase;transition:all .2s}
+    .fb:hover,.fb.active{border-color:var(--gold);color:var(--gold)}
+
+    /* ACCOUNT */
+    .tier-band{display:flex;align-items:center;justify-content:space-between;border:.5px solid var(--border-hi);padding:1.3rem 1.6rem;margin-bottom:1.2rem;flex-wrap:wrap;gap:1rem;background:rgba(200,169,110,.025)}
+    .tb-tier-lbl{font-family:'Cinzel',serif;font-size:.35rem;letter-spacing:.38em;color:var(--dim);text-transform:uppercase;margin-bottom:.3rem}
+    .tb-tier-val{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.18em;color:var(--gold)}
+    .tb-note{font-size:.82rem;font-style:italic;color:var(--dim);max-width:280px;line-height:1.6;text-align:right}
+    .ig{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:1.2rem}
+    .ic{background:var(--bg2);padding:1.3rem 1.4rem}
+    .ic-lbl{font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.38em;color:var(--dim);text-transform:uppercase;margin-bottom:.45rem}
+    .ic-val{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;color:var(--chrome);word-break:break-word}
+    .adm-badge{display:inline-flex;align-items:center;gap:.5rem;border:.5px solid rgba(200,169,110,.35);padding:.28rem .7rem;margin-bottom:1rem}
+    .adm-badge span{font-family:'Cinzel',serif;font-size:.36rem;letter-spacing:.28em;color:var(--gold);text-transform:uppercase}
+    .locked-notice{background:var(--bg2);border:.5px solid var(--border);padding:2.5rem;text-align:center}
+    .ln-text{font-family:'Cinzel',serif;font-size:.45rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;line-height:1.9}
+    .ln-text span{color:var(--red-hi)}
+
+    /* ── ADMIN TABS ── */
+    .adm-tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:.5px solid var(--border)}
+    .adm-tab{font-family:'Cinzel',serif;font-size:.42rem;letter-spacing:.25em;color:var(--dim2);padding:.75rem 1.2rem;cursor:pointer;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;background:none;border-left:none;border-right:none;border-top:none}
+    .adm-tab:hover{color:var(--chrome)}
+    .adm-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .adm-section{display:none}.adm-section.active{display:block;animation:panelIn .25s ease}
+
+    /* ADMIN: ANNOUNCEMENT FORM */
+    .ann-form{display:grid;gap:.8rem}
+    .ann-form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    .form-group{display:flex;flex-direction:column;gap:.4rem}
+    .form-label{font-family:'Cinzel',serif;font-size:.38rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+    .form-input{background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.7rem .9rem;outline:none;width:100%;transition:border-color .3s}
+    .form-input:focus{border-color:var(--gold)}
+    .form-input::placeholder{color:var(--dim);font-style:italic}
+    .form-select{background:var(--bg2);border:.5px solid var(--border);color:var(--white);font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.12em;padding:.7rem .9rem;outline:none;width:100%;cursor:pointer}
+    .form-textarea{background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.7rem .9rem;outline:none;width:100%;resize:vertical;min-height:100px;line-height:1.6;transition:border-color .3s}
+    .form-textarea:focus{border-color:var(--gold)}
+    .form-textarea::placeholder{color:var(--dim);font-style:italic}
+
+    /* ADMIN: MEMBER ROW */
+    .member-row{display:grid;grid-template-columns:1fr 150px 80px auto;gap:.8rem;align-items:center;padding:.95rem 0;border-bottom:.5px solid var(--border)}
+    .member-row:last-child{border-bottom:none}
+    .member-name{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.14em;color:var(--chrome)}
+    .member-email{font-size:.78rem;font-style:italic;color:var(--dim);margin-top:.15rem}
+
+    /* ADMIN: ANN LIST */
+    .adm-ann{padding:1rem 1.2rem;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:background .2s}
+    .adm-ann:last-child{border-bottom:none}
+    .adm-ann:hover{background:var(--gold-glow)}
+    .adm-ann.pinned{border-left:2px solid var(--gold)}
+    .adm-ann-info{flex:1;min-width:0}
+    .adm-ann-title{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.12em;color:var(--chrome);margin-bottom:.3rem}
+    .adm-ann-meta{font-size:.78rem;font-style:italic;color:var(--dim2)}
+    .adm-ann-actions{display:flex;gap:.4rem;flex-shrink:0;align-items:flex-start}
+
+    /* ACTIVITY */
+    .act-list{max-height:320px;overflow-y:auto;padding:0 1.4rem}
+    .act-list::-webkit-scrollbar{width:2px}
+    .act-list::-webkit-scrollbar-thumb{background:var(--border)}
+    .act-item{display:flex;gap:1rem;padding:.75rem 0;border-bottom:.5px solid var(--border)}
+    .act-item:last-child{border-bottom:none}
+    .act-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:.35rem}
+    .act-dot.red{background:var(--red-hi)}
+    .act-time{font-family:'Cinzel',serif;font-size:.32rem;letter-spacing:.18em;color:var(--dim);margin-bottom:.12rem}
+    .act-txt{font-size:.82rem;font-style:italic;color:var(--chrome);line-height:1.5}
+
+    /* BUTTONS */
+    .btn{background:transparent;border:.5px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.35em;padding:.7rem 1.2rem;cursor:pointer;text-transform:uppercase;transition:background .25s,color .25s}
+    .btn:hover{background:var(--gold);color:var(--bg)}
+    .btn.ghost{border-color:var(--border);color:var(--dim2)}
+    .btn.ghost:hover{background:var(--border);color:var(--chrome)}
+    .btn.danger{border-color:var(--red-hi);color:var(--red-hi)}
+    .btn.danger:hover{background:var(--red-hi);color:var(--white)}
+    .btn.sm{font-size:.38rem;padding:.5rem .85rem}
+    .btn.xs{font-size:.34rem;padding:.35rem .65rem}
+    .btn:disabled{opacity:.38;cursor:not-allowed}
+    .btn-row{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center}
+
+    #toasts{position:fixed;bottom:calc(var(--bottom-nav) + .8rem);right:1rem;z-index:400;display:flex;flex-direction:column;gap:.4rem}
+    .tst{font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.2em;padding:.65rem 1rem;border:.5px solid var(--border-hi);background:var(--bg2);color:var(--gold);text-transform:uppercase;animation:tstIn .25s ease}
+    .tst.err{color:var(--red-hi);border-color:rgba(204,32,32,.3)}
+    .tst.ok{color:var(--green);border-color:rgba(34,197,94,.3)}
+    @keyframes tstIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+
+    #p-account{contain:layout style}
+    .cl-avatarBox,.cl-userButtonAvatarBox{border-radius:50%!important;overflow:hidden!important}
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .stat-bar{grid-template-columns:1fr 1fr}
+      .g2{grid-template-columns:1fr}
+      .fin-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:640px){
+      :root{--sidebar:0px}
+      #sidebar{display:none}
+      #bottomNav{display:block}
+      html,body{height:100dvh}
+      #shell{height:calc(100dvh - 52px - var(--bottom-nav));min-height:0}
+      #main{padding:1.2rem 1rem calc(var(--bottom-nav) + env(safe-area-inset-bottom) + 1.5rem)}
+      .stat-bar{grid-template-columns:1fr 1fr}
+      .ig{grid-template-columns:1fr}
+      .fin-grid{grid-template-columns:1fr}
+      .ft{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+      .ph-left .ph-title{font-size:1.15rem}
+      .member-row{grid-template-columns:1fr;gap:.4rem}
+      .tb-crumb{display:none}.tb-tier{display:none}
+      .ann-form-row{grid-template-columns:1fr}
+      #toasts{bottom:calc(var(--bottom-nav) + .5rem);right:.5rem;left:.5rem}
     }
 
-    /* ---------- mobile menu + mobile polish ---------- */
-    .menu-btn{display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:44px;height:44px;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-    .menu-btn span{display:block;width:22px;height:1.5px;background:#fff;transition:transform .35s ease,opacity .25s ease}
-    .menu-btn.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
-    .menu-btn.open span:nth-child(2){opacity:0}
-    .menu-btn.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
-    .menu-btn:focus-visible{outline:1px solid var(--accent);outline-offset:-4px}
-    #siteMenu{position:fixed;inset:0;z-index:205;display:none;flex-direction:column;align-items:center;justify-content:safe center;gap:1.4rem;padding:calc(env(safe-area-inset-top,0px) + 72px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);background:rgba(0,0,0,.97);overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility 0s linear .35s}
-    #siteMenu.open{opacity:1;visibility:visible;transition:opacity .35s ease,visibility 0s}
-    #siteMenu ul{list-style:none;display:flex;flex-direction:column;align-items:center;gap:.1rem}
-    #siteMenu li a{display:block;padding:12px 28px;color:var(--white);text-decoration:none;text-align:center;font-family:'Cinzel',serif;font-weight:600;font-size:clamp(18px,5.2vw,26px);letter-spacing:.16em;text-transform:uppercase;line-height:1.2;transition:color .25s}
-    #siteMenu li a:hover,#siteMenu li a:focus-visible,#siteMenu li a.active{color:var(--accent);outline:none}
-    #siteMenu li:first-child{margin-bottom:.8rem;padding-bottom:.8rem;border-bottom:.5px solid rgba(255,255,255,.18)}
-    #siteMenu .menu-legal{display:flex;gap:1.6rem}
-    #siteMenu .menu-legal a{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;padding:10px 0}
-    @media(max-width:768px){
-      .menu-btn{display:flex}
-      #siteMenu{display:flex}
-      .div-bar{height:48px;padding:0 .4rem 0 1.2rem;padding-top:env(safe-area-inset-top,0px);height:calc(48px + env(safe-area-inset-top,0px))}
-      .div-links{display:none}
-      .div-brand{font-size:.62rem}
-      nav{top:calc(48px + env(safe-area-inset-top,0px));padding:1rem 1.2rem;background:rgba(5,5,5,.96)}
-      .nav-parent{font-size:.62rem;padding:6px 0}
-      .nav-mark{font-size:1rem}
-      .nav-dash-link,.user-signout{font-size:.58rem;min-height:40px;display:inline-flex;align-items:center}
-      .user-chip-email{display:none}
-      #navUserBtn{gap:.6rem}
-      .hero{padding:9rem 1.4rem 3rem;min-height:85vh}
-      .hero-label{font-size:.62rem;letter-spacing:.4em}
-      .hero-sub{font-size:.62rem;letter-spacing:.3em;margin-bottom:2rem}
-      .hero-statement{font-size:1.1rem;line-height:1.7}
-      .section-divider{margin:3.5rem auto;padding:0 1.2rem;gap:1rem}
-      .section-divider span{font-size:.6rem;letter-spacing:.3em}
-      .pillar{padding:2rem 1.4rem}
-      .pillar-icon{font-size:.6rem}.pillar-title{font-size:.95rem}.pillar-text{font-size:1rem}
-      .gate-title,.redirect-title{font-size:.7rem}
-      .gate-sub,.redirect-sub{font-size:1rem}
-      .redirect-btn{font-size:.62rem;padding:1rem 1.4rem;min-height:48px}
-      .portal-wrap{padding:0 1rem 5rem}
-      footer{padding:2rem 1.2rem calc(2rem + env(safe-area-inset-bottom,0px))}
-      .footer-links{flex-wrap:wrap;font-size:.62rem;gap:.4rem 1.1rem}
-      .footer-links a,.footer-back{padding:10px 0;display:inline-block}
-      .footer-copy{font-size:.58rem;line-height:1.7}
-      #authMount .lvo-auth{max-width:100%;margin:0 auto}
-      #authMount .lvo-auth-tab{font-size:.62rem;padding:.9rem 0;min-height:44px}
-      #authMount .lvo-field label{font-size:.58rem}
-      #authMount .lvo-field input{font-size:16px;padding:.8rem}
-      #authMount .lvo-btn{font-size:.64rem;padding:1rem;min-height:48px}
-      #authMount .lvo-resend,#authMount .lvo-back,#authMount .lvo-forgot,#authMount .lvo-request{font-size:.58rem;padding:.8rem .4rem;min-height:44px}
-      #authMount .lvo-recovery-email{font-size:.62rem}
-    }
-    @media(max-width:360px){#authMount .lvo-row{grid-template-columns:1fr}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{transition:none}}
+    /* Vindex identity: blueprint + safety amber */
+    .card,.deal,.sc,.wo{border-radius:2px}
+    .card{background:var(--bg2);border-color:var(--border);box-shadow:inset 3px 0 0 rgba(200,169,110,.35)}
+    
+    .wo.urgent,.wo-badge.urgent{border-color:var(--amber);color:var(--amber)}
+    .pulse-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:1.2rem}
+    .pulse-bar .sc{background:var(--bg2)}
+    .ph-bar{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.4rem;border-bottom:.5px solid var(--border)}
+    .ph-bar-name{flex:0 0 38%;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ph-bar-track{flex:1;height:6px;background:rgba(200,169,110,.1)}
+    .ph-bar-fill{height:100%;background:var(--gold)}.ph-bar-fill.warn{background:var(--amber)}
+    .ph-bar-n{font-family:'Cormorant SC',serif;font-size:.7rem;color:var(--dim2);min-width:5.5rem;text-align:right}
+    @media(max-width:700px){.pulse-bar{grid-template-columns:repeat(2,1fr)}}
+
+    .tb-logo{height:26px;width:auto;margin-right:.8rem;display:block}
+    .av{border-radius:50%;object-fit:cover;flex-shrink:0;border:.5px solid var(--border-hi,rgba(255,255,255,.3))}
+    .av-i{display:inline-flex;align-items:center;justify-content:center;background:var(--gold-dim,rgba(255,255,255,.08));color:var(--gold,#fff);font-family:'Cinzel',serif;letter-spacing:.04em}
+    .av-slot{display:inline-flex;margin-right:-.4rem}
+
+    /* ── admin edit / delete ── */
+    .row-actions{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.8rem}
+    .vendor-row .row-actions,.insp-row .row-actions{margin-top:.55rem;justify-content:flex-end}
+    .member-actions{display:flex;gap:.35rem;justify-content:flex-end}
+    .mdl-back{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:1rem;animation:panelIn .2s ease}
+    .mdl{background:#000;border:.5px solid var(--border-hi);box-shadow:inset 3px 0 0 rgba(200,169,110,.35);width:100%;max-width:580px;max-height:92dvh;display:flex;flex-direction:column}
+    .mdl-hd{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.4rem;border-bottom:.5px solid var(--border)}
+    .mdl-title{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .mdl-bd{padding:1.2rem 1.4rem;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+    .mdl-bd .full{grid-column:1/-1}
+    .mdl-ft{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap;padding:1rem 1.4rem;border-top:.5px solid var(--border)}
+    @media(max-width:640px){.mdl-bd{grid-template-columns:1fr}.mdl-ft{flex-direction:column-reverse;align-items:stretch}.mdl-ft .btn-row{justify-content:stretch}.mdl-ft .btn-row .btn{flex:1}}
   </style>
 </head>
 <body>
-<div class="page">
 
-  <!-- Divisions Switcher Bar -->
-  <div class="div-bar">
-    <span class="div-brand">LVO Holdings</span>
-    <div class="div-links">
-      <a href="https://vindex.wearelvo.com" class="div-link active">Division 01 · Vindex</a>
-      <a href="https://alliance.wearelvo.com" class="div-link">Division 02 · Alliance</a>
-      <a href="https://operations.wearelvo.com" class="div-link">Division 03 · Operations</a>
-      <a href="https://wearelvo.com/careers/" class="div-link">Careers</a>
-      <a href="https://about.wearelvo.com/" class="div-link">About</a>
-    </div>
-    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteMenu"><span></span><span></span><span></span></button>
+<div id="loadScreen">
+  <img src="/assets/logo.png" alt="LVO" style="height:64px;width:auto"/>
+  <div class="ls-rule"></div>
+  <div class="ls-mark">𝐋𝐕𝐎 Holdings · Division 01</div>
+  <div class="ls-name">VINDEX</div>
+  <div class="ls-sub">Real Estate · Property · Maintenance</div>
+  <div class="ls-status" id="loadStatus">Initializing…</div>
+  <div class="ls-bar"><div class="ls-bar-fill"></div></div>
+</div>
+
+<div id="errorScreen">
+  <div class="ls-rule"></div>
+  <div class="err-title">Authentication Error</div>
+  <div class="err-msg" id="errMsg">Unable to initialize authentication.</div>
+  <button class="btn" onclick="window.location.reload()">↺ Retry</button>
+  <a class="btn ghost" href="https://wearelvo.com/vindex/" style="text-decoration:none;display:inline-flex;align-items:center;padding:.7rem 1.2rem">← Return to site</a>
+</div>
+
+<div id="topbar" style="display:none">
+  <div class="tb-left">
+    <img src="/assets/logo.png" class="tb-logo" alt="LVO"/>
+    <a href="https://vindex.wearelvo.com" class="tb-mark" style="text-decoration:none">𝐋𝐕𝐎 Vindex</a>
+    <div class="tb-divider"></div>
+    <span class="tb-crumb">Property &amp; Maintenance</span>
   </div>
+  <div class="tb-right">
+    <span id="tbAvatarSlot" class="av-slot"></span>
+    <span class="tb-name" id="tbName"></span>
+    <span class="tb-tier" id="tbTier"></span>
+    <button class="tb-signout" id="tbSignOut" type="button">Sign Out</button>
+  </div>
+</div>
 
-  <nav id="siteMenu" aria-label="Main menu">
-    <ul>
-      <li><a href="https://wearelvo.com/">LVO Holdings</a></li>
-      <li><a href="https://vindex.wearelvo.com" class="active" aria-current="page">Vindex</a></li>
-      <li><a href="https://alliance.wearelvo.com">Alliance</a></li>
-      <li><a href="https://operations.wearelvo.com">Operations</a></li>
-      <li><a href="https://wearelvo.com/careers/">Careers</a></li>
-      <li><a href="https://about.wearelvo.com/">About</a></li>
-    </ul>
-    <div class="menu-legal">
-      <a href="https://privacy.wearelvo.com">Privacy</a>
-      <a href="https://tos.wearelvo.com">Terms</a>
+<div id="shell" style="display:none">
+  <nav id="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Navigation</div>
+      <div class="nav-item active" data-p="overview" onclick="goTo('overview')"><span class="nav-ico">◈</span><span class="nav-lbl">Overview</span></div>
+      <div class="nav-item" data-p="properties" onclick="goTo('properties')"><span class="nav-ico">◇</span><span class="nav-lbl">Properties</span><span class="nav-badge" id="propBadge" style="display:none">0</span></div>
+      <div class="nav-item" data-p="financials" onclick="goTo('financials')"><span class="nav-ico">◉</span><span class="nav-lbl">Financials</span></div>
+      <div class="nav-item" data-p="fieldops" onclick="goTo('fieldops')"><span class="nav-ico">⬟</span><span class="nav-lbl">Maintenance</span><span class="nav-badge" id="opsBadge" style="display:none">!</span></div>
+      <div class="nav-item" data-p="announcements" onclick="goTo('announcements')"><span class="nav-ico">▣</span><span class="nav-lbl">Announcements</span><span class="nav-badge" id="annBadge" style="display:none">★</span></div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Account</div>
+      <div class="nav-item" data-p="account" onclick="goTo('account')"><span class="nav-ico">◎</span><span class="nav-lbl">My Account</span></div>
+      <div class="nav-item" id="adminNav" data-p="admin" onclick="goTo('admin')" style="display:none"><span class="nav-ico">⬡</span><span class="nav-lbl">Admin</span></div>
+    </div>
+    <div class="sb-foot">
+      <a class="sb-back" href="https://wearelvo.com" style="margin-top:.3rem;opacity:.5;font-size:.34rem">← wearelvo.com</a>
+      <div class="live-pip"><div class="pip"></div><span class="pip-txt" id="refreshLabel">Live</span></div>
+      <div class="sb-status" id="sbStatus">● Connecting…</div>
     </div>
   </nav>
 
-  <nav>
-    <div class="nav-left">
-      <a class="nav-parent" href="https://wearelvo.com">← LVO Holdings</a>
-      <a class="nav-mark" href="/">LVO Vindex</a>
+  <main id="main">
+
+    <!-- OVERVIEW -->
+    <div class="panel active" id="p-overview">
+      <div class="ph">
+        <div class="ph-left">
+          <div class="ph-eyebrow">𝐋𝐕𝐎 Vindex · Real Estate</div>
+          <div class="ph-title" id="ovTitle">Dashboard</div>
+          <div class="ph-sub">Every property is a position. Every repair protects it.</div>
+        </div>
+        <div class="ph-rule"></div>
+      </div>
+      <div class="stat-bar">
+        <div class="sc"><div class="sc-lbl">Standing</div><div class="sc-val" id="sTier">—</div></div>
+        <div class="sc"><div class="sc-lbl">Properties</div><div class="sc-val" id="sProps">—</div></div>
+        <div class="sc"><div class="sc-lbl">Division</div><div class="sc-val">Vindex</div></div>
+        <div class="sc"><div class="sc-lbl">Member Since</div><div class="sc-val" id="sJoined">—</div></div>
+      </div>
+      <div class="pulse-bar">
+        <div class="sc"><div class="sc-lbl">Open Repairs</div><div class="sc-val" id="pvOpen">—</div></div>
+        <div class="sc"><div class="sc-lbl">Urgent</div><div class="sc-val" id="pvUrgent" style="color:var(--amber)">—</div></div>
+        <div class="sc"><div class="sc-lbl">Avg Age (days)</div><div class="sc-val" id="pvAge">—</div></div>
+        <div class="sc"><div class="sc-lbl">Next Inspection</div><div class="sc-val" id="pvInsp" style="font-size:.6rem">—</div></div>
+      </div>
+      <div class="card g-full">
+        <div class="ch"><span class="ct">Property Health · Open Work by Property</span><span class="cm">Live from Field Ops</span></div>
+        <div id="propHealth"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="ct">Active Properties</span><span class="cm" id="ovPropCount">—</span></div>
+          <div id="ovProps"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <span class="ct">Announcements</span>
+            <div style="display:flex;align-items:center;gap:.8rem">
+              <span class="cm" id="ovAnnTime">—</span>
+              <button class="btn sm ghost" style="padding:.3rem .65rem;font-size:.34rem" onclick="fetchAnn(true)">↺</button>
+            </div>
+          </div>
+          <div id="ovAnn"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      <div class="card g-full">
+        <div class="ch"><span class="ct">Recent Activity</span></div>
+        <div class="act-list" id="actList"><div class="empty">No activity yet.</div></div>
+      </div>
     </div>
-    <div class="nav-right">
-      <span class="nav-tag">Real Estate &amp; Asset Management Division</span>
-      <div id="navUserBtn">
-        <a class="nav-dash-link" id="navDashLink" href="https://vindex.wearelvo.com/dashboard/">→ Vindex Dashboard</a>
-        <div id="userChip" class="user-chip">
-          <img class="user-chip-avatar" id="userChipAvatar" style="display:none"/>
-          <span class="user-chip-email" id="userChipEmail"></span>
-          <button class="user-signout" id="userSignOutBtn" type="button">Sign Out</button>
+
+    <!-- PROPERTIES -->
+    <div class="panel" id="p-properties">
+      <div class="ph">
+        <div class="ph-left"><div class="ph-eyebrow">Portfolio</div><div class="ph-title">Properties</div><div class="ph-sub">All properties assigned to your Vindex account.</div></div>
+        <div class="ph-rule"></div>
+      </div>
+      <div id="propsLocked" class="locked-notice" style="display:none"><p class="ln-text">Property Data <span>Restricted</span><br/>Unlocked at Tier III and above</p></div>
+      <div id="propsContent"></div>
+    </div>
+
+    <!-- FINANCIALS -->
+    <div class="panel" id="p-financials">
+      <div class="ph">
+        <div class="ph-left"><div class="ph-eyebrow">Capital</div><div class="ph-title">Financials</div><div class="ph-sub">Portfolio valuation and capital deployment summary.</div></div>
+        <div class="ph-rule"></div>
+      </div>
+      <div id="finLocked" class="locked-notice" style="display:none"><p class="ln-text">Financial Data <span>Restricted</span><br/>Unlocked at Tier III and above</p></div>
+      <div id="finContent">
+        <div class="fin-grid">
+          <div class="fgc"><div class="fg-lbl">Capital Deployed</div><div class="fg-val" id="finCap">—</div></div>
+          <div class="fgc"><div class="fg-lbl">Portfolio Holdings</div><div class="fg-val" id="finEq">—</div></div>
+          <div class="fgc"><div class="fg-lbl">Active Properties</div><div class="fg-val" id="finDls">—</div></div>
+        </div>
+        <div class="card" style="overflow-x:auto">
+          <div class="ch"><span class="ct">Property Positions</span><span class="cm" id="finMonth">—</span></div>
+          <table class="ft">
+            <thead><tr><th>Property</th><th>Type</th><th>Position</th><th>Status</th><th>Capital</th></tr></thead>
+            <tbody id="finTbody"><tr><td colspan="5"><div class="empty">Loading…</div></td></tr></tbody>
+          </table>
         </div>
       </div>
     </div>
-  </nav>
 
-  <section class="hero">
-    <p class="hero-label">LVO Holdings · Division 01</p>
-    <h1 class="hero-title">Vindex</h1>
-    <p class="hero-sub">Real Estate · Physical Assets · Advisory</p>
-    <p class="hero-statement">Tangible wealth preservation. Direct property portfolio acquisition and institutional asset governance for the LVO orbit.</p>
-    <div class="hero-rule"></div>
-  </section>
-
-  <div class="section-divider"><span>Asset Capabilities</span></div>
-  <section class="pillars">
-    <div class="pillars-grid">
-      <div class="pillar">
-        <span class="pillar-icon">Real Estate</span>
-        <p class="pillar-title">Direct Property Holdings</p>
-        <p class="pillar-text">Prime commercial and single-tenant assets acquired with long-term capital preservation focus.</p>
+    <!-- FIELD OPS -->
+    <div class="panel" id="p-fieldops">
+      <div class="ph">
+        <div class="ph-left">
+          <div class="ph-eyebrow">Maintenance</div>
+          <div class="ph-title">Maintenance</div>
+          <div class="ph-sub">Work orders, maintenance, vendors, and inspections across all properties.</div>
+        </div>
+        <div class="ph-rule"></div>
+        <div class="btn-row">
+          <button class="btn sm" onclick="showNewWOForm()">+ New Work Order</button>
+          <button class="btn sm ghost" onclick="fetchFieldOps(true)">↺ Refresh</button>
+        </div>
       </div>
-      <div class="pillar">
-        <span class="pillar-icon">Portfolio Intel</span>
-        <p class="pillar-title">Asset Governance</p>
-        <p class="pillar-text">Disciplined yield tracking, capitalization analysis, and lifecycle asset security.</p>
+      <div class="stat-bar" id="opsStatBar">
+        <div class="sc"><div class="sc-lbl">Open Orders</div><div class="sc-val" id="opsOpen" style="color:#ef4444">—</div></div>
+        <div class="sc"><div class="sc-lbl">In Progress</div><div class="sc-val" id="opsInProg" style="color:var(--gold)">—</div></div>
+        <div class="sc"><div class="sc-lbl">Completed (30d)</div><div class="sc-val" id="opsDone" style="color:#22c55e">—</div></div>
+        <div class="sc"><div class="sc-lbl">Next Inspection</div><div class="sc-val" id="opsNextInsp" style="font-size:.6rem">—</div></div>
       </div>
-      <div class="pillar">
-        <span class="pillar-icon">Advisory</span>
-        <p class="pillar-title">Strategic Syndicate</p>
-        <p class="pillar-text">Private advisory for family principals, legal counsel, and select operating associates.</p>
+      <div class="card g-full">
+        <div class="ch">
+          <span class="ct">Work Orders</span>
+          <div class="fbar" style="margin:0">
+            <button class="fb active" onclick="filterWO('all',this)">All</button>
+            <button class="fb" onclick="filterWO('open',this)">Open</button>
+            <button class="fb" onclick="filterWO('in-progress',this)">In Progress</button>
+            <button class="fb" onclick="filterWO('scheduled',this)">Scheduled</button>
+            <button class="fb" onclick="filterWO('completed',this)">Completed</button>
+          </div>
+        </div>
+        <div id="woList"><div class="empty" style="padding:1.5rem">Loading work orders…</div></div>
+      </div>
+      <div id="newWOForm" class="card g-full" style="display:none">
+        <div class="ch"><span class="ct">New Work Order</span><button class="btn sm ghost" onclick="hideNewWOForm()">✕ Cancel</button></div>
+        <div class="cb" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div style="grid-column:1/-1">
+            <div class="ic-lbl" style="margin-bottom:.4rem">Title / Description</div>
+            <input id="woTitle" placeholder="e.g. HVAC unit failure — Unit 3B" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.7rem .9rem;outline:none"/>
+          </div>
+          <div>
+            <div class="ic-lbl" style="margin-bottom:.4rem">Property</div>
+            <input id="woProperty" placeholder="Address or property name" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.7rem .9rem;outline:none"/>
+          </div>
+          <div>
+            <div class="ic-lbl" style="margin-bottom:.4rem">Trade Type</div>
+            <select id="woType" style="width:100%;background:var(--bg2);border:.5px solid var(--border);color:var(--gold);font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.12em;padding:.7rem .9rem;outline:none;cursor:pointer">
+              <option value="">Select trade…</option>
+              <option>HVAC</option><option>Plumbing</option><option>Electrical</option>
+              <option>Roofing</option><option>Carpentry</option><option>Cosmetic</option>
+              <option>Landscaping</option><option>Appliance</option><option>General</option>
+            </select>
+          </div>
+          <div>
+            <div class="ic-lbl" style="margin-bottom:.4rem">Priority</div>
+            <select id="woPriority" style="width:100%;background:var(--bg2);border:.5px solid var(--border);color:var(--gold);font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.12em;padding:.7rem .9rem;outline:none;cursor:pointer">
+              <option value="normal">Normal</option><option value="urgent">Urgent</option>
+            </select>
+          </div>
+          <div>
+            <div class="ic-lbl" style="margin-bottom:.4rem">Assigned Vendor</div>
+            <input id="woVendor" placeholder="Vendor name (optional)" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.7rem .9rem;outline:none"/>
+          </div>
+          <div>
+            <div class="ic-lbl" style="margin-bottom:.4rem">Est. Cost</div>
+            <input id="woCost" placeholder="e.g. $800–$1,200" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.7rem .9rem;outline:none"/>
+          </div>
+          <div style="grid-column:1/-1">
+            <div class="ic-lbl" style="margin-bottom:.4rem">Notes</div>
+            <textarea id="woNotes" placeholder="Additional context or details…" rows="3" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.7rem .9rem;outline:none;resize:vertical"></textarea>
+          </div>
+          <div style="grid-column:1/-1">
+            <button class="btn" onclick="submitWO()" id="woSubmitBtn">Submit Work Order</button>
+          </div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="ct">Vendor Directory</span><button class="btn sm ghost" onclick="showAddVendorForm()">+ Add</button></div>
+          <div id="vendorList"><div class="empty" style="padding:1rem">Loading vendors…</div></div>
+          <div id="addVendorForm" style="display:none;border-top:.5px solid var(--border);padding:1rem 1.4rem">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem">
+              <input id="vName" placeholder="Company name" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.6rem .8rem;outline:none;width:100%"/>
+              <input id="vTrade" placeholder="Trade specialty" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.6rem .8rem;outline:none;width:100%"/>
+              <input id="vPhone" placeholder="Phone" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.6rem .8rem;outline:none;width:100%"/>
+              <input id="vEmail" placeholder="Email" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.6rem .8rem;outline:none;width:100%"/>
+            </div>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn sm" onclick="submitVendor()">Add Vendor</button>
+              <button class="btn sm ghost" onclick="hideAddVendorForm()">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Inspections</span><button class="btn sm ghost" onclick="showAddInspForm()">+ Schedule</button></div>
+          <div id="inspList"><div class="empty" style="padding:1rem">Loading inspections…</div></div>
+          <div id="addInspForm" style="display:none;border-top:.5px solid var(--border);padding:1rem 1.4rem">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem">
+              <input id="iProperty" placeholder="Property address" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.6rem .8rem;outline:none;width:100%"/>
+              <input id="iType" placeholder="Inspection type" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;padding:.6rem .8rem;outline:none;width:100%"/>
+              <input id="iDate" type="date" style="background:transparent;border:.5px solid var(--border);color:var(--gold);font-family:'Cinzel',serif;font-size:.4rem;padding:.6rem .8rem;outline:none;width:100%;letter-spacing:.1em"/>
+              <select id="iResult" style="background:var(--bg2);border:.5px solid var(--border);color:var(--gold);font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.12em;padding:.6rem .8rem;outline:none;cursor:pointer;width:100%">
+                <option value="upcoming">Upcoming</option><option value="pass">Pass</option>
+                <option value="attention">Attention</option><option value="fail">Fail</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn sm" onclick="submitInsp()">Save Inspection</button>
+              <button class="btn sm ghost" onclick="hideAddInspForm()">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <div class="section-divider"><span>Vindex Portal</span></div>
-  <section class="portal-wrap">
-
-    <div id="portalGate">
-      <p class="gate-title">Vindex Portal Access</p>
-      <p class="gate-sub">Access is restricted to accredited principals, associates, and asset managers.</p>
-      <div id="authMount"></div>
+    <!-- ANNOUNCEMENTS -->
+    <div class="panel" id="p-announcements">
+      <div class="ph">
+        <div class="ph-left"><div class="ph-eyebrow">Communications</div><div class="ph-title">Announcements</div><div class="ph-sub">Posted from 𝐋𝐕𝐎. Refreshes every 15 minutes.</div></div>
+        <div class="ph-rule"></div>
+        <div class="btn-row"><button class="btn sm ghost" onclick="fetchAnn(true)">↺ Refresh</button></div>
+      </div>
+      <div class="fbar">
+        <button class="fb active" onclick="filterAnn('all',this)">All</button>
+        <button class="fb" onclick="filterAnn('pinned',this)">Pinned</button>
+        <button class="fb" onclick="filterAnn('div',this)">Vindex Only</button>
+      </div>
+      <div id="annList" class="card"><div class="empty" style="padding:1.5rem">Loading…</div></div>
     </div>
 
-    <div id="portalRedirect">
-      <p class="redirect-title">Vindex Portal</p>
-      <p class="redirect-name" id="redirectName">—</p>
-      <p class="redirect-sub" id="redirectSub">Authenticated. Redirecting to Vindex Dashboard…</p>
-      <a class="redirect-btn" id="enterDashboardBtn" href="https://vindex.wearelvo.com/dashboard/">Enter Vindex Dashboard →</a>
+    <!-- ACCOUNT -->
+    <div class="panel" id="p-account">
+      <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Profile</div><div class="ph-title">My Account</div></div><div class="ph-rule"></div></div>
+      <div id="admBadgeWrap" style="display:none"><div class="adm-badge"><span>⬡ 𝐋𝐕𝐎 Administration · Executive Access</span></div></div>
+      <div class="tier-band">
+        <div><div class="tb-tier-lbl">Current Standing</div><div class="tb-tier-val" id="acTier">—</div></div>
+        <div class="tb-note" id="tierNote" style="display:none">Tier advancement is reviewed and updated by 𝐋𝐕𝐎 Holdings administration.</div>
+      </div>
+      <div class="ig">
+        <div class="ic"><div class="ic-lbl">Full Name</div><div class="ic-val" style="display:flex;align-items:center;gap:.6rem"><span id="acAvatarSlot"></span><span id="acName">—</span></div></div>
+        <div class="ic"><div class="ic-lbl">Email</div><div class="ic-val" id="acEmail">—</div></div>
+        <div class="ic"><div class="ic-lbl">Division</div><div class="ic-val">Vindex · Real Estate</div></div>
+        <div class="ic"><div class="ic-lbl">Role</div><div class="ic-val" id="acRole">—</div></div>
+        <div class="ic"><div class="ic-lbl">Member Since</div><div class="ic-val" id="acJoined">—</div></div>
+        <div class="ic"><div class="ic-lbl">Portal</div><div class="ic-val">Vindex Dashboard v2.3</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">Manage Account</span></div>
+        <div class="cb">
+          <div style="display:grid;gap:.9rem;max-width:420px">
+            <div>
+              <div class="ic-lbl" style="margin-bottom:.4rem">First Name</div>
+              <input id="profFirstName" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.7rem .9rem;outline:none"/>
+            </div>
+            <div>
+              <div class="ic-lbl" style="margin-bottom:.4rem">Last Name</div>
+              <input id="profLastName" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.7rem .9rem;outline:none"/>
+            </div>
+            <div>
+              <div class="ic-lbl" style="margin-bottom:.4rem">Username</div>
+              <input id="profUsername" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.7rem .9rem;outline:none"/>
+            </div>
+            <div>
+              <div class="ic-lbl" style="margin-bottom:.4rem">Avatar</div>
+              <input id="profAvatarFile" type="file" accept="image/*" style="width:100%;background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.85rem;padding:.6rem .9rem;outline:none"/>
+            </div>
+            <div class="btn-row">
+              <button class="btn sm" onclick="saveProfile()">Save Changes →</button>
+            </div>
+            <p style="font-size:.78rem;font-style:italic;color:var(--dim)">Email and division can't be changed here — contact 𝐋𝐕𝐎 Administration.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-  </section>
+    <!-- ══ ADMIN ══ -->
+    <div class="panel" id="p-admin">
+      <div class="ph">
+        <div class="ph-left">
+          <div class="ph-eyebrow" style="color:var(--gold)">Executive</div>
+          <div class="ph-title">Admin Panel</div>
+          <div class="ph-sub">Full control over Vindex operations.</div>
+        </div>
+        <div class="ph-rule"></div>
+      </div>
 
-  <footer>
-    <div class="footer-links">
-      <a href="https://wearelvo.com/">LVO Holdings</a>
-      <span>·</span>
-      <a href="https://privacy.wearelvo.com">Privacy</a>
-      <span>·</span>
-      <a href="https://tos.wearelvo.com">Terms</a>
-    </div>
-    <span class="footer-copy">&copy; 2026 LVO Holdings · Vindex Real Estate &amp; Asset Division</span>
-  </footer>
+      <div class="stat-bar" style="margin-bottom:1.5rem">
+        <div class="sc"><div class="sc-lbl">Total Members</div><div class="sc-val" id="admTotal">—</div></div>
+        <div class="sc"><div class="sc-lbl">Announcements</div><div class="sc-val" id="admAnnCount">—</div></div>
+        <div class="sc"><div class="sc-lbl">Your Standing</div><div class="sc-val" id="admMyTier">—</div></div>
+        <div class="sc"><div class="sc-lbl">Version</div><div class="sc-val">2.3 · 2026</div></div>
+      </div>
 
+      <!-- TABS -->
+      <div class="adm-tabs">
+        <button class="adm-tab active" onclick="switchAdmTab('announcements',this)">Announcements</button>
+        <button class="adm-tab" onclick="switchAdmTab('members',this)">Members</button>
+        <button class="adm-tab" onclick="switchAdmTab('properties',this)">Properties</button>
+        <button class="adm-tab" onclick="switchAdmTab('fieldops',this)">Field Ops</button>
+        <button class="adm-tab" onclick="switchAdmTab('activity',this)">Activity</button>
+      </div>
+
+      <!-- TAB: ANNOUNCEMENTS -->
+      <div class="adm-section active" id="adm-announcements">
+        <div class="g2" style="margin-bottom:1.5rem">
+          <div class="card">
+            <div class="ch"><span class="ct">Post Announcement</span></div>
+            <div class="cb">
+              <div class="ann-form">
+                <div class="form-group">
+                  <label class="form-label">Title</label>
+                  <input class="form-input" id="annTitle" placeholder="Announcement title…" type="text"/>
+                </div>
+                <div class="ann-form-row">
+                  <div class="form-group">
+                    <label class="form-label">Division</label>
+                    <select class="form-select" id="annDivision">
+                      <option value="All">All Divisions</option>
+                      <option value="Vindex" selected>Vindex</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Author</label>
+                    <input class="form-input" id="annAuthor" placeholder="LVO Administration" type="text"/>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Body</label>
+                  <textarea class="form-textarea" id="annBody" placeholder="Announcement content…"></textarea>
+                </div>
+                <div class="btn-row">
+                  <button class="btn" onclick="postAnnouncement()">Post Announcement →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Live Preview</span></div>
+            <div id="annPreview" style="padding:1.2rem 1.4rem">
+              <div class="ann-body" style="color:var(--dim)">Fill in the form to preview your announcement.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Manage Announcements</span><button class="btn sm ghost" onclick="loadAdminAnn()">↺ Refresh</button></div>
+          <div id="admAnnList"><div class="empty" style="padding:1.5rem">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- TAB: MEMBERS -->
+      <div class="adm-section" id="adm-members">
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="ch"><span class="ct">Create Member</span></div>
+          <div class="cb">
+            <div class="ann-form">
+              <div class="ann-form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input class="form-input" id="newMemberFirst" placeholder="First name" type="text"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-input" id="newMemberLast" placeholder="Last name" type="text"/>
+                </div>
+              </div>
+              <div class="ann-form-row">
+                <div class="form-group">
+                  <label class="form-label">Username</label>
+                  <input class="form-input" id="newMemberUsername" placeholder="username" type="text"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input class="form-input" id="newMemberEmail" placeholder="name@company.com" type="email"/>
+                </div>
+              </div>
+              <div class="ann-form-row">
+                <div class="form-group">
+                  <label class="form-label">Starting Tier</label>
+                  <select class="form-select" id="newMemberTier">
+                    <option value="4" selected>Tier IV — Member</option>
+                    <option value="3">Tier III — Partner</option>
+                    <option value="2">Tier II — Associate</option>
+                    <option value="1">Tier I — Principal</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Access Role</label>
+                  <select class="form-select" id="newMemberRole">
+                    <option value="member" selected>Member</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+              <div class="btn-row">
+                <button class="btn" onclick="createMember()">Create Account →</button>
+              </div>
+              <p style="font-size:.78rem;font-style:italic;color:var(--dim)">A temporary password is generated automatically and emailed to the member. No self-signup step required — the account is pre-verified. This mirrors the Alliance dashboard's invite-only flow.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <span class="ct">Member Tier Management</span>
+            <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
+              <input id="memberSearch" placeholder="Search name or email…" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.5rem .8rem;outline:none;width:220px" oninput="filterMembers()"/>
+              <span class="cm" id="memberCount"></span>
+              <button class="btn sm ghost" onclick="loadAdminMembers()">↺ Refresh</button>
+            </div>
+          </div>
+          <div class="cb" id="admList"><div class="empty">Loading members…</div></div>
+        </div>
+      </div>
+
+      <!-- TAB: PROPERTIES ADMIN -->
+      <div class="adm-section" id="adm-properties">
+        <div class="card">
+          <div class="ch">
+            <span class="ct">All Properties</span>
+            <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
+              <input id="propSearch" placeholder="Search properties…" style="background:transparent;border:.5px solid var(--border);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.5rem .8rem;outline:none;width:220px" oninput="renderAdminProps()"/>
+              <span class="cm" id="admPropCount"></span>
+              <button class="btn sm" onclick="addProp()">+ Add Property</button>
+              <button class="btn sm ghost" onclick="loadAdminProps()">↺ Refresh</button>
+            </div>
+          </div>
+          <div id="admPropList"><div class="empty" style="padding:1.5rem">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- TAB: FIELD OPS ADMIN -->
+      <div class="adm-section" id="adm-fieldops">
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><span class="ct">All Work Orders</span><button class="btn sm ghost" onclick="fetchFieldOps(true)">↺</button></div>
+            <div id="admWoList"><div class="empty" style="padding:1.5rem">Loading…</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Update Order Status</span></div>
+            <div class="cb">
+              <div style="margin-bottom:.8rem">
+                <div class="form-label" style="margin-bottom:.4rem">Work Order ID</div>
+                <input class="form-input" id="admWoId" placeholder="WO-2026-XXX"/>
+              </div>
+              <div style="margin-bottom:.8rem">
+                <div class="form-label" style="margin-bottom:.4rem">New Status</div>
+                <select class="form-select" id="admWoStatus">
+                  <option value="open">Open</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              <div style="margin-bottom:.8rem">
+                <div class="form-label" style="margin-bottom:.4rem">Notes (optional)</div>
+                <textarea class="form-textarea" id="admWoNotes" placeholder="Status update notes…" style="min-height:70px"></textarea>
+              </div>
+              <button class="btn sm" onclick="adminUpdateWO()">Update Status</button>
+            </div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><span class="ct">Vendor Directory</span></div>
+            <div id="admVendorList"><div class="empty" style="padding:1rem">Loading…</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Inspections</span></div>
+            <div id="admInspList"><div class="empty" style="padding:1rem">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ACTIVITY -->
+      <div class="adm-section" id="adm-activity">
+        <div class="card">
+          <div class="ch"><span class="ct">Activity Log</span><button class="btn sm ghost" onclick="renderAct()">↺ Refresh</button></div>
+          <div class="act-list" id="admFeed"><div class="empty">No activity.</div></div>
+        </div>
+      </div>
+
+    </div><!-- /p-admin -->
+
+  </main>
 </div>
 
+<!-- MOBILE BOTTOM NAV -->
+<div id="bottomNav">
+  <div class="bn-inner">
+    <div class="bn-item active" data-p="overview" onclick="goTo('overview')"><span class="bn-ico">◈</span><span class="bn-lbl">Overview</span></div>
+    <div class="bn-item" data-p="properties" onclick="goTo('properties')"><span class="bn-ico">◇</span><span class="bn-lbl">Properties</span><span class="bn-dot" id="bnPropDot"></span></div>
+    <div class="bn-item" data-p="financials" onclick="goTo('financials')"><span class="bn-ico">◉</span><span class="bn-lbl">Financials</span></div>
+    <div class="bn-item" data-p="fieldops" onclick="goTo('fieldops')"><span class="bn-ico">⬟</span><span class="bn-lbl">Field Ops</span><span class="bn-dot" id="bnOpsDot"></span></div>
+    <div class="bn-item" data-p="announcements" onclick="goTo('announcements')"><span class="bn-ico">▣</span><span class="bn-lbl">News</span><span class="bn-dot" id="bnAnnDot"></span></div>
+    <div class="bn-item" data-p="account" onclick="goTo('account')"><span class="bn-ico">◎</span><span class="bn-lbl">Account</span></div>
+    <div class="bn-item" id="bnAdminItem" data-p="admin" onclick="goTo('admin')" style="display:none"><span class="bn-ico">⬡</span><span class="bn-lbl">Admin</span></div>
+  </div>
+</div>
+<div id="toasts"></div>
+
 <script src="/assets/auth-client.js?v=cloud1"></script>
-<script src="/assets/auth-widget.js?v=cloud1"></script>
 <script>
-(function () {
-  const DASHBOARD_URL = 'https://vindex.wearelvo.com/dashboard/';
-  const gate = document.getElementById('portalGate');
-  const redirect = document.getElementById('portalRedirect');
-  const navUserBtn = document.getElementById('navUserBtn');
-  const userChipEmail = document.getElementById('userChipEmail');
-  const userChipAvatar = document.getElementById('userChipAvatar');
-  const userSignOutBtn = document.getElementById('userSignOutBtn');
+/* ── CONFIG ── */
+const WORKER = LVOAuth.WORKER;
+const THIS_DIVISION = 'Vindex';
+const MARKETING_SITE = 'https://wearelvo.com/vindex/';
+const LOGIN_URL = MARKETING_SITE + '?next=dashboard';
+const DOWN_PAGE = 'https://down.wearelvo.com/';
+const STATUS_POLL_MS = 20000; // re-check every 20s while the dashboard stays open, same as Alliance
+const TIER_LABELS={1:'Tier I — Principal',2:'Tier II — Associate',3:'Tier III — Partner',4:'Tier IV — Member'};
 
-  let autoRedirectTimer = null;
+/* ── STATE ── */
+let _U=null,_ann=[],_annFilter='all',_annTimer=null,_annSec=900,_activity=[];
+let _members=[],_admAnnList=[],_adminProps=[];
+/* Worker route for the full property list (admin). Per-member view still uses /auth/me/deals. */
+const DEALS_PATH='/deals';
+let _workOrders=[],_vendors=[],_inspections=[],_woFilter='all';
+let _statusPollTimer=null;
 
-  function dashUrlWithToken() {
-    return DASHBOARD_URL + '#lvo_token=' + encodeURIComponent(LVOAuth.getToken() || '');
+/* ── UTILS ── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function toast(msg,type=''){const z=document.getElementById('toasts');const el=document.createElement('div');el.className='tst'+(type?' '+type:'');el.textContent=msg;z.appendChild(el);setTimeout(()=>el.remove(),3200)}
+function setLoad(msg){const el=document.getElementById('loadStatus');if(el)el.textContent=msg}
+function showError(msg){document.getElementById('loadScreen')?.classList.add('out');const es=document.getElementById('errorScreen');if(es){document.getElementById('errMsg').textContent=msg;es.classList.add('show');}}
+function setSbStatus(ok,msg){const el=document.getElementById('sbStatus');if(!el)return;el.className='sb-status '+(ok?'ok':'err');el.textContent=(ok?'● ':'○ ')+msg}
+function logAct(action,isAdmin=false){_activity.unshift({action,isAdmin,time:new Date().toISOString()});_activity=_activity.slice(0,50);renderAct()}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+function setDisplay(id,v){const el=document.getElementById(id);if(el)el.style.display=v}
+/* Vindex shows real-estate properties only. Deals belong to Alliance and are never shown here. */
+function isVindexProp(d){return String((d&&d.division)||'').toLowerCase()==='vindex'}
+function genWOId(){return'WO-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*900)+100)}
+
+/* ── FETCH HELPERS ──
+   Every request carries the Bearer session token automatically via
+   LVOAuth._request. Role/permission checks happen server-side against the
+   session — there's no client-supplied role header to trust or forge. ── */
+function workerFetch(path, opts={}){
+  return LVOAuth._request(path, opts).then(data => ({ ok:true, json:async()=>data }))
+    .catch(e => ({ ok:false, status:e.status||500, json:async()=>e.data||{error:e.message}, text:async()=>e.message }));
+}
+function adminFetch(path, opts={}){ return workerFetch(path, opts); }
+
+/* Returns true (and redirects) if this division is marked down.
+   Fails OPEN on network errors so a blip never locks someone out.
+   Mirrors the Alliance dashboard's system-status check exactly. */
+async function checkSystemStatus(){
+  try{
+    const res = await workerFetch(`/system-status/${encodeURIComponent(THIS_DIVISION)}`);
+    if(!res.ok) return false;
+    const data = await res.json();
+    if(data.down){
+      const params = new URLSearchParams({ division: THIS_DIVISION, msg: data.message || '' });
+      window.location.replace(`${DOWN_PAGE}?${params.toString()}`);
+      return true;
+    }
+    return false;
+  }catch(e){
+    console.warn('system status check failed (failing open)', e);
+    return false;
   }
+}
 
-  function showGate() {
-    if (autoRedirectTimer) { clearTimeout(autoRedirectTimer); autoRedirectTimer = null; }
-    gate.style.display = 'block';
-    redirect.classList.remove('show');
-    navUserBtn.classList.remove('show');
-    LVOAuthWidget.mount(document.getElementById('authMount'), {
-      division: 'Vindex',
-      onAuthenticated: showSignedIn,
-    });
+function startStatusPolling(){
+  clearInterval(_statusPollTimer);
+  _statusPollTimer = setInterval(checkSystemStatus, STATUS_POLL_MS);
+  document.addEventListener('visibilitychange', () => {
+    if(!document.hidden) checkSystemStatus();
+  });
+}
+
+/* ── NAVIGATION ── */
+function goTo(id){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.p===id));
+  document.querySelectorAll('.bn-item').forEach(n=>n.classList.toggle('active',n.dataset.p===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='p-'+id));
+  if(id==='announcements'){setDisplay('annBadge','none');document.getElementById('bnAnnDot')?.classList.remove('show');}
+  if(id==='properties')document.getElementById('bnPropDot')?.classList.remove('show');
+  if(id==='fieldops'){document.getElementById('bnOpsDot')?.classList.remove('show');setDisplay('opsBadge','none');}
+  if(id==='admin')initAdminPanel();
+  document.getElementById('main').scrollTop=0;
+}
+
+function switchAdmTab(name,btn){
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('adm-'+name).classList.add('active');
+  if(name==='members')loadAdminMembers();
+  if(name==='announcements')loadAdminAnn();
+  if(name==='properties')loadAdminProps();
+  if(name==='fieldops')renderAdminFieldOps();
+  if(name==='activity')renderAct();
+}
+
+/* ── POPULATE (from LVOAuth session user + /auth/me/deals) ── */
+async function populateDash(user){
+  const name=`${user.firstName||''} ${user.lastName||''}`.trim()||user.username||'Member';
+  const email=user.email||'—';
+  const isAdmin=user.role==='admin';
+  const tier=parseInt(user.tier)||4;
+  const role=user.role||'member';
+  const joined=user.createdAt?new Date(user.createdAt).toLocaleDateString('en-US',{month:'long',year:'numeric'}):'—';
+  const props=(await LVOAuth.myDeals()).filter(isVindexProp);
+
+  _U={uid:user.id,name,email,isAdmin,tier,role,joined,props,avatar:user.avatar||'',username:user.username||''};
+
+  setText('tbName',name);setText('tbTier',TIER_LABELS[tier]||TIER_LABELS[4]);
+  syncAvatars(user.avatar,name);
+  setText('ovTitle',`Welcome, ${name.split(' ')[0]}`);
+  setText('sTier',TIER_LABELS[tier]||TIER_LABELS[4]);setText('sJoined',joined);
+  setText('acTier',TIER_LABELS[tier]||TIER_LABELS[4]);setText('acName',name);
+  setText('acEmail',email);setText('acRole',role!=='admin'?role:'Administrator');
+  setText('acJoined',joined);setText('admMyTier',TIER_LABELS[tier]||TIER_LABELS[4]);
+  setText('finMonth',new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'}));
+  const pfn=document.getElementById('profFirstName');if(pfn)pfn.value=user.firstName||'';
+  const pln=document.getElementById('profLastName');if(pln)pln.value=user.lastName||'';
+  const pun=document.getElementById('profUsername');if(pun)pun.value=user.username||'';
+  setDisplay('admBadgeWrap',isAdmin?'block':'none');
+  setDisplay('adminNav',isAdmin?'flex':'none');
+  setDisplay('bnAdminItem',isAdmin?'flex':'none');
+  const tn=document.getElementById('tierNote');if(tn)tn.style.display=(!isAdmin&&tier>=3)?'block':'none';
+  renderProps(props,tier,isAdmin);
+  renderFin(props,tier,isAdmin);
+}
+
+async function saveProfile(){
+  const firstName=document.getElementById('profFirstName').value.trim();
+  const lastName=document.getElementById('profLastName').value.trim();
+  const username=document.getElementById('profUsername').value.trim();
+  const fileInput=document.getElementById('profAvatarFile');
+
+  const applyUpdate=async(avatar)=>{
+    try{
+      const fields={firstName,lastName,username};
+      if(avatar!==undefined)fields.avatar=avatar;
+      const updated=await LVOAuth.updateProfile(fields);
+      _U.name=`${updated.firstName} ${updated.lastName}`.trim();
+      setText('tbName',_U.name);setText('acName',_U.name);
+      if(updated.avatar)_U.avatar=updated.avatar;syncAvatars(_U.avatar,_U.name);
+      toast('Profile updated','ok');logAct('Updated profile');
+    }catch(e){toast('Failed: '+(e.data?.error||e.message),'err');}
+  };
+
+  if(fileInput.files&&fileInput.files[0]){
+    const reader=new FileReader();
+    reader.onload=()=>applyUpdate(reader.result);
+    reader.readAsDataURL(fileInput.files[0]);
+  }else{
+    applyUpdate(undefined);
   }
+}
 
-  function showSignedIn(user) {
-    gate.style.display = 'none';
-    redirect.classList.add('show');
-    navUserBtn.classList.add('show');
+/* ── PROPERTIES ── */
+function propHTML(d,isAdmin,tier,withActions){
+  const sc=(d.status||'active').toLowerCase().replace(/\s+/g,'-');
+  const showCap=isAdmin||tier<=1;
+  const pt=d.type||d.division||'';
+  const tc=pt.toLowerCase().includes('commercial')?'commercial':pt.toLowerCase().includes('mixed')?'mixed':'residential';
+  return`<div class="deal">
+    <div class="deal-hd">
+      <span class="deal-name">${esc(d.name||'Unnamed')}</span>
+      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+        ${pt?`<span class="prop-tag ${tc}">${esc(pt)}</span>`:''}
+        <span class="deal-st ${sc}">${esc(d.status||'Active')}</span>
+      </div>
+    </div>
+    <div class="deal-meta">
+      <div><div class="dm-lbl">Position</div><div class="dm-val">${esc(d.position||'—')}</div></div>
+      <div><div class="dm-lbl">Date</div><div class="dm-val">${esc(d.date||'—')}</div></div>
+      ${showCap&&d.capital?`<div><div class="dm-lbl">Value</div><div class="dm-val">${esc(d.capital)}</div></div>`:''}
+    </div>
+    ${d.note?`<div class="deal-note">${esc(d.note)}</div>`:''}
+    ${withActions?actionsHTML('editProp','deleteProp',d.id):''}
+  </div>`;
+}
 
-    document.getElementById('redirectName').textContent = user.firstName || 'Principal';
-    userChipEmail.textContent = user.email || '';
-    if (user.avatar) { userChipAvatar.src = user.avatar; userChipAvatar.style.display = 'block'; }
-    else { userChipAvatar.style.display = 'none'; }
+function renderProps(props,tier,isAdmin){
+  const canSee=isAdmin||tier<=3;
+  setText('sProps',canSee?String(props.length):'—');
+  setText('ovPropCount',canSee?`${props.length} propert${props.length!==1?'ies':'y'}`:'Restricted');
+  if(props.length&&canSee){const pb=document.getElementById('propBadge');if(pb){pb.style.display='block';pb.textContent=props.length;}document.getElementById('bnPropDot')?.classList.add('show');}
+  const ovEl=document.getElementById('ovProps');
+  if(!canSee){if(ovEl)ovEl.innerHTML='<div class="empty">Unlocked at Tier III+</div>';setDisplay('propsLocked','block');const pc=document.getElementById('propsContent');if(pc)pc.innerHTML='';return;}
+  setDisplay('propsLocked','none');
+  if(!props.length){if(ovEl)ovEl.innerHTML='<div class="empty">No properties assigned.</div>';const pc=document.getElementById('propsContent');if(pc)pc.innerHTML='<div class="empty" style="padding:1.5rem">No properties assigned to your account yet.</div>';return;}
+  if(ovEl)ovEl.innerHTML=props.slice(0,2).map(d=>propHTML(d,isAdmin,tier)).join('');
+  const pc=document.getElementById('propsContent');if(pc)pc.innerHTML=`<div class="card">${props.map(d=>propHTML(d,isAdmin,tier)).join('')}</div>`;
+}
 
-    const dashUrl = dashUrlWithToken();
-    document.getElementById('navDashLink').href = dashUrl;
-    document.getElementById('enterDashboardBtn').href = dashUrl;
+/* ── FINANCIALS ── */
+function renderFin(props,tier,isAdmin){
+  const canSee=isAdmin||tier<=3;
+  setDisplay('finLocked',canSee?'none':'block');setDisplay('finContent',canSee?'block':'none');
+  if(!canSee)return;
+  const showCap=isAdmin||tier<=1;
+  let total=0;props.forEach(d=>{if(!d.capital)return;const n=parseFloat(String(d.capital).replace(/[$,\s~+]/g,''));if(!isNaN(n))total+=n;});
+  setText('finCap',showCap?(total?'$'+total.toLocaleString('en-US'):'—'):'Restricted');
+  setText('finEq',String(props.length||'—'));
+  setText('finDls',String(props.filter(d=>(d.status||'').toLowerCase()==='active').length||props.length||'—'));
+  const tb=document.getElementById('finTbody');if(!tb)return;
+  if(!props.length){tb.innerHTML='<tr><td colspan="5"><div class="empty">No property positions on file.</div></td></tr>';return;}
+  tb.innerHTML=props.map(d=>{
+    const sc=(d.status||'active').toLowerCase().replace(/\s+/g,'-');
+    const pt=d.type||d.division||'—';
+    return`<tr><td><span class="ft-lbl">Property</span>${esc(d.name||'—')}</td><td><span class="ft-lbl">Type</span>${esc(pt)}</td><td><span class="ft-lbl">Position</span>${esc(d.position||'—')}</td><td><span class="deal-st ${sc}" style="display:inline-block">${esc(d.status||'Active')}</span></td><td>${showCap?esc(d.capital||'—'):'—'}</td></tr>`;
+  }).join('');
+}
 
-    if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
-    autoRedirectTimer = setTimeout(() => { window.location.href = dashUrl; }, 1200);
+/* ── FIELD OPS ── */
+async function fetchFieldOps(manual=false){
+  try{
+    const [woRes,vRes,iRes]=await Promise.all([
+      workerFetch('/work-orders'),
+      workerFetch('/vendors'),
+      workerFetch('/inspections')
+    ]);
+    if(woRes.ok)_workOrders=await woRes.json();else _workOrders=[];
+    if(vRes.ok) _vendors=await vRes.json();    else _vendors=[];
+    if(iRes.ok) _inspections=await iRes.json();else _inspections=[];
+    renderWorkOrders();renderVendors();renderInspections();updateOpsStats();
+    setSbStatus(true,'Connected · Live');
+    if(manual)toast('Field Ops refreshed','ok');
+    if(document.getElementById('adm-fieldops')?.classList.contains('active'))renderAdminFieldOps();
+  }catch(e){
+    console.error(e);setSbStatus(false,'Worker error');
+    if(manual)toast('Refresh failed',true);
+    document.getElementById('woList').innerHTML='<div class="empty" style="padding:1.5rem">Unable to load. Check Worker connection.</div>';
   }
+}
 
-  userSignOutBtn.addEventListener('click', async () => {
+function updateOpsStats(){
+  const open=_workOrders.filter(w=>w.status==='open').length;
+  const inProg=_workOrders.filter(w=>w.status==='in-progress').length;
+  const thirty=new Date();thirty.setDate(thirty.getDate()-30);
+  const done=_workOrders.filter(w=>w.status==='completed'&&new Date(w.updated_at||w.created_at)>=thirty).length;
+  setText('opsOpen',String(open||'0'));setText('opsInProg',String(inProg||'0'));setText('opsDone',String(done||'0'));
+  const upcoming=_inspections.filter(i=>i.result==='upcoming'&&i.date).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  setText('opsNextInsp',upcoming.length?new Date(upcoming[0].date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'None');
+  if(open>0){const ob=document.getElementById('opsBadge');if(ob)ob.style.display='block';document.getElementById('bnOpsDot')?.classList.add('show');}
+}
+
+function filterWO(status,btn){
+  _woFilter=status;
+  document.querySelectorAll('#p-fieldops .fb').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderWorkOrders();
+}
+
+function woCardHTML(w){
+  const sc=(w.status||'open').toLowerCase().replace(/\s+/g,'-');
+  const isUrgent=w.priority==='urgent';
+  return`<div class="wo ${sc}">
+    <div class="wo-id">${esc(w.wo_id||'WO-—')}</div>
+    <div class="wo-hd">
+      <div class="wo-title">${esc(w.title||'Untitled')}</div>
+      <div class="wo-badges">
+        ${isUrgent?'<span class="wo-badge urgent">⬡ Urgent</span>':''}
+        ${w.type?`<span class="wo-badge type">${esc(w.type)}</span>`:''}
+        <span class="wo-badge ${sc}">${esc(w.status||'Open')}</span>
+      </div>
+    </div>
+    <div class="wo-meta">
+      ${w.property?`<div><div class="wm-lbl">Property</div><div class="wm-val">${esc(w.property)}</div></div>`:''}
+      <div><div class="wm-lbl">Reported</div><div class="wm-val">${w.created_at?new Date(w.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—'}</div></div>
+      <div><div class="wm-lbl">Assigned To</div><div class="wm-val">${esc(w.vendor||'Unassigned')}</div></div>
+      ${w.cost?`<div><div class="wm-lbl">Est. Cost</div><div class="wm-val">${esc(w.cost)}</div></div>`:''}
+    </div>
+    ${w.notes?`<div class="wo-note">${esc(w.notes)}</div>`:''}
+    ${actionsHTML('editWO','deleteWO',woKey(w))}
+  </div>`;
+}
+
+function renderWorkOrders(){
+  const el=document.getElementById('woList');if(!el)return;
+  let data=[..._workOrders];
+  if(_woFilter!=='all')data=data.filter(w=>w.status===_woFilter);
+  el.innerHTML=data.length?data.map(woCardHTML).join(''):'<div class="empty" style="padding:1.5rem">No work orders found.</div>';
+}
+
+function renderAdminFieldOps(){
+  const el=document.getElementById('admWoList');
+  if(el)el.innerHTML=_workOrders.length?_workOrders.map(w=>woCardHTML(w)).join(''):'<div class="empty" style="padding:1.5rem">No work orders.</div>';
+  const vEl=document.getElementById('admVendorList');
+  if(vEl)vEl.innerHTML=_vendors.length?_vendors.map(vendorRowHTML).join(''):'<div class="empty" style="padding:1rem">No vendors.</div>';
+  const iEl=document.getElementById('admInspList');
+  if(iEl)iEl.innerHTML=_inspections.length?_inspections.map(inspRowHTML).join(''):'<div class="empty" style="padding:1rem">No inspections.</div>';
+}
+
+async function adminUpdateWO(){
+  const woId=document.getElementById('admWoId')?.value?.trim();
+  const status=document.getElementById('admWoStatus')?.value;
+  const notes=document.getElementById('admWoNotes')?.value?.trim();
+  if(!woId){toast('Work order ID required','err');return;}
+  try{
+    const patch={status};
+    if(notes)patch.notes=notes;
+    const res=await adminFetch(`/work-orders/${encodeURIComponent(woId)}`,{method:'PATCH',body:JSON.stringify(patch)});
+    if(!res.ok)throw new Error(await res.text());
+    toast(`${woId} → ${status}`,'ok');
+    logAct(`Updated work order ${woId} → ${status}`,true);
+    await fetchFieldOps();
+  }catch(e){toast('Update failed: '+e.message,'err');}
+}
+
+function showNewWOForm(){setDisplay('newWOForm','block');const m=document.getElementById('main');if(m)setTimeout(()=>m.scrollTo({top:m.scrollHeight,behavior:'smooth'}),100);}
+function hideNewWOForm(){setDisplay('newWOForm','none')}
+
+async function submitWO(){
+  const title=document.getElementById('woTitle')?.value?.trim();
+  if(!title){toast('Title is required','err');return;}
+  const btn=document.getElementById('woSubmitBtn');
+  if(btn){btn.disabled=true;btn.textContent='Submitting…';}
+  try{
+    const payload={title,property:document.getElementById('woProperty')?.value?.trim()||null,type:document.getElementById('woType')?.value||null,priority:document.getElementById('woPriority')?.value||'normal',vendor:document.getElementById('woVendor')?.value?.trim()||null,cost:document.getElementById('woCost')?.value?.trim()||null,notes:document.getElementById('woNotes')?.value?.trim()||null,author:_U?.name||'Vindex Member'};
+    const res=await workerFetch('/work-orders',{method:'POST',body:JSON.stringify(payload)});
+    if(!res.ok)throw new Error(await res.text());
+    const created=await res.json();
+    _workOrders.unshift(created);
+    renderWorkOrders();updateOpsStats();hideNewWOForm();
+    ['woTitle','woProperty','woVendor','woCost','woNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('woType').value='';document.getElementById('woPriority').value='normal';
+    toast('Work order created','ok');logAct(`New work order: ${title}`);
+  }catch(e){toast('Failed to create','err');}
+  finally{if(btn){btn.disabled=false;btn.textContent='Submit Work Order';}}
+}
+
+function vendorRowHTML(v){
+  const stars=[1,2,3,4,5].map(i=>`<div class="vn-star${i>(v.rating||0)?' empty':''}"></div>`).join('');
+  return`<div class="vendor-row"><div><div class="vn-name">${esc(v.name||'—')}</div><div class="vn-trade">${esc(v.trade||'—')}</div><div class="vn-contact">${[v.phone,v.email].filter(Boolean).map(esc).join(' · ')||'—'}</div></div><div style="text-align:right"><div class="vn-stars">${stars}</div><div class="${v.active!=0?'vn-status-ok':'vn-status-na'}">${v.active!=0?'Active':'Inactive'}</div>${actionsHTML('editVendor','deleteVendor',v.id)}</div></div>`;
+}
+
+function renderVendors(){
+  const el=document.getElementById('vendorList');if(!el)return;
+  if(!_vendors.length){el.innerHTML='<div class="empty" style="padding:1rem">No vendors on file.</div>';return;}
+  el.innerHTML=_vendors.map(vendorRowHTML).join('');
+}
+
+function showAddVendorForm(){setDisplay('addVendorForm','block')}
+function hideAddVendorForm(){setDisplay('addVendorForm','none')}
+
+async function submitVendor(){
+  const name=document.getElementById('vName')?.value?.trim();
+  if(!name){toast('Vendor name required','err');return;}
+  try{
+    const payload={name,trade:document.getElementById('vTrade')?.value?.trim()||null,phone:document.getElementById('vPhone')?.value?.trim()||null,email:document.getElementById('vEmail')?.value?.trim()||null,author:_U?.name||'Vindex Member'};
+    const res=await workerFetch('/vendors',{method:'POST',body:JSON.stringify(payload)});
+    if(!res.ok)throw new Error(await res.text());
+    const created=await res.json();
+    _vendors.push(created);
+    _vendors.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    renderVendors();hideAddVendorForm();
+    ['vName','vTrade','vPhone','vEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast(`${name} added`,'ok');logAct(`Added vendor: ${name}`);
+  }catch(e){toast('Failed to add vendor','err');}
+}
+
+function inspRowHTML(i){
+  const d=i.date?new Date(i.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+  const result=(i.result||'upcoming').toLowerCase();
+  return`<div class="insp-row"><div><div class="insp-prop">${esc(i.property||'—')}</div><div class="insp-type">${esc(i.type||'General')}</div><div class="insp-date">${d}</div></div><div style="text-align:right"><span class="insp-badge ${result}">${result==='pass'?'Pass':result==='attention'?'Attention':result==='fail'?'Fail':'Upcoming'}</span>${actionsHTML('editInsp','deleteInsp',i.id)}</div></div>`;
+}
+
+function renderInspections(){
+  const el=document.getElementById('inspList');if(!el)return;
+  if(!_inspections.length){el.innerHTML='<div class="empty" style="padding:1rem">No inspections on file.</div>';return;}
+  el.innerHTML=_inspections.slice(0,8).map(inspRowHTML).join('');
+}
+
+function showAddInspForm(){setDisplay('addInspForm','block')}
+function hideAddInspForm(){setDisplay('addInspForm','none')}
+
+async function submitInsp(){
+  const property=document.getElementById('iProperty')?.value?.trim();
+  const date=document.getElementById('iDate')?.value;
+  if(!property||!date){toast('Property and date required','err');return;}
+  try{
+    const payload={property,type:document.getElementById('iType')?.value?.trim()||'General',date,result:document.getElementById('iResult')?.value||'upcoming',author:_U?.name||'Vindex Member'};
+    const res=await workerFetch('/inspections',{method:'POST',body:JSON.stringify(payload)});
+    if(!res.ok)throw new Error(await res.text());
+    const created=await res.json();
+    _inspections.unshift(created);
+    renderInspections();updateOpsStats();hideAddInspForm();
+    ['iProperty','iType','iDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('iResult').value='upcoming';
+    toast('Inspection scheduled','ok');logAct(`Scheduled inspection: ${property}`);
+  }catch(e){toast('Failed to save inspection','err');}
+}
+
+/* ── ANNOUNCEMENTS ── */
+async function fetchAnn(manual=false){
+  _annSec=900;
+  try{
+    const res=await workerFetch('/announcements');
+    if(!res.ok)throw new Error(`${res.status}`);
+    _ann=await res.json();
+    renderAnnList();renderOvAnn();
+    const pinned=_ann.filter(a=>a.pinned&&(a.division==='Vindex'||a.division==='All'));
+    if(pinned.length){const ab=document.getElementById('annBadge');if(ab)ab.style.display='block';document.getElementById('bnAnnDot')?.classList.add('show');}
+    setSbStatus(true,'Connected · Live');
+    setText('ovAnnTime',`Updated ${new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`);
+    if(manual)toast('Announcements refreshed','ok');
+    if(document.getElementById('adm-announcements')?.classList.contains('active'))loadAdminAnn();
+  }catch(e){
+    console.error(e);setSbStatus(false,'Worker error');
+    if(manual)toast('Refresh failed','err');
+  }
+}
+
+function renderOvAnn(){
+  const el=document.getElementById('ovAnn');if(!el)return;
+  const items=_ann.filter(a=>a.division==='Vindex'||a.division==='All').slice(0,3);
+  if(!items.length){el.innerHTML='<div class="empty">No announcements yet.</div>';return;}
+  el.innerHTML=items.map(a=>{
+    const preview=(a.body||'').slice(0,100)+((a.body||'').length>100?'…':'');
+    return`<div style="padding:.75rem 1.4rem;border-bottom:.5px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem">
+        ${a.pinned?'<span class="ann-pin-badge">★</span>':''}
+        <div style="font-family:\'Cinzel\',serif;font-size:.52rem;letter-spacing:.1em;color:var(--chrome)">${esc(a.title||'')}</div>
+      </div>
+      ${preview?`<div style="font-size:.8rem;font-style:italic;color:var(--dim2);line-height:1.5">${esc(preview)}</div>`:''}
+    </div>`;
+  }).join('');
+  const last=el.querySelector('div:last-child');if(last)last.style.borderBottom='none';
+}
+
+function renderAnnList(){
+  const el=document.getElementById('annList');if(!el)return;
+  let data=[..._ann];
+  if(_annFilter==='pinned')data=data.filter(a=>a.pinned&&(a.division==='Vindex'||a.division==='All'));
+  else if(_annFilter==='all')data=data.filter(a=>a.division==='All'||a.division==='Vindex');
+  else if(_annFilter==='div')data=data.filter(a=>a.division==='Vindex');
+  if(!data.length){el.innerHTML='<div class="empty" style="padding:1.5rem">No announcements found.</div>';return;}
+  el.innerHTML=data.map(a=>`<div class="ann${a.pinned?' pinned':''}">
+    <div class="ann-hd">
+      <div>${a.pinned?'<span class="ann-pin-badge">★ Pinned · </span>':''}<span class="ann-title">${esc(a.title||'')}</span></div>
+      <span class="ann-div">${esc(a.division||'All')}</span>
+    </div>
+    <div class="ann-body">${esc(a.body||'')}</div>
+    <div class="ann-ft">
+      <div style="display:flex;gap:.6rem;align-items:center">
+        <span class="ann-author">${esc(a.author||'LVO Administration')}</span>
+        <span class="ann-time">· ${new Date(a.created_at).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})}</span>
+      </div>
+      ${_U?.isAdmin?`<div class="ann-actions"><button class="ann-action-btn" data-id="${avEsc(a.id)}" onclick="editAnn(this.dataset.id)">Edit</button><button class="ann-action-btn del" onclick="deleteAnn('${a.id}')">Delete</button></div>`:''}
+    </div>
+  </div>`).join('');
+}
+
+function filterAnn(type,btn){_annFilter=type;document.querySelectorAll('#p-announcements .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderAnnList();}
+
+function startCountdown(){
+  clearInterval(_annTimer);
+  _annTimer=setInterval(()=>{
+    _annSec--;const m=Math.floor(_annSec/60),s=_annSec%60;
+    setText('refreshLabel',`${m}:${String(s).padStart(2,'0')}`);
+    if(_annSec<=0)fetchAnn();
+  },1000);
+}
+
+/* ── ACTIVITY ── */
+function renderAct(){
+  const html=_activity.slice(0,12).map(a=>`<div class="act-item"><div class="act-dot${a.isAdmin?' red':''}"></div><div><div class="act-time">${new Date(a.time).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})}</div><div class="act-txt">${esc(a.action)}</div></div></div>`).join('');
+  const fallback='<div class="empty">No activity yet.</div>';
+  const al=document.getElementById('actList');if(al)al.innerHTML=html||fallback;
+  const af=document.getElementById('admFeed');if(af)af.innerHTML=html||fallback;
+}
+
+async function loadAdminActivity(){
+  try{
+    const res=await adminFetch('/activity');
+    if(!res.ok)return;
+    const log=await res.json();
+    const af=document.getElementById('admFeed');if(!af)return;
+    if(!log.length){af.innerHTML='<div class="empty">No activity.</div>';return;}
+    af.innerHTML=log.slice(0,40).map(a=>`<div class="act-item"><div class="act-dot${a.is_admin_action?' red':''}"></div><div><div class="act-time">${new Date(a.time).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})}</div><div class="act-txt">${esc(a.action)}${a.actor?' · '+esc(a.actor):''}</div></div></div>`).join('');
+  }catch(e){}
+}
+
+/* ── ADMIN PANEL ── */
+function initAdminPanel(){
+  if(!_U?.isAdmin)return;
+  setText('admMyTier',TIER_LABELS[_U.tier]||TIER_LABELS[4]);
+  loadAdminAnn();
+  loadAdminActivity();
+  setupAnnPreview();
+}
+
+/* ── ADMIN: ANNOUNCEMENTS ── */
+async function loadAdminAnn(){
+  const el=document.getElementById('admAnnList');
+  if(!el)return;
+  el.innerHTML='<div class="empty" style="padding:1.5rem">Loading…</div>';
+  try{
+    const res=await workerFetch('/announcements');
+    if(!res.ok)throw new Error(`${res.status}`);
+    const list=await res.json();
+    _admAnnList=list;
+    setText('admAnnCount',list.length);
+    if(!list.length){el.innerHTML='<div class="empty" style="padding:1.5rem">No announcements yet.</div>';return;}
+    el.innerHTML=list.map(a=>`<div class="adm-ann${a.pinned?' pinned':''}">
+      <div class="adm-ann-info">
+        <div class="adm-ann-title">${a.pinned?'★ ':''}<span>${esc(a.title)}</span></div>
+        <div class="adm-ann-meta">${esc(a.division)} · ${esc(a.author||'LVO Administration')} · ${new Date(a.created_at).toLocaleDateString('en-US',{dateStyle:'medium'})}</div>
+      </div>
+      <div class="adm-ann-actions">
+        <button class="btn xs${a.pinned?' ghost':''}" onclick="toggleGlobalPin('${a.id}',${!a.pinned})">${a.pinned?'Unpin':'Pin'}</button>
+        <button class="btn xs" data-id="${avEsc(a.id)}" onclick="editAnn(this.dataset.id)">Edit</button>
+        <button class="btn xs danger" onclick="deleteAnn('${a.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+  }catch(e){el.innerHTML=`<div class="empty" style="padding:1.5rem;color:var(--red-hi)">Error: ${esc(e.message)}</div>`;}
+}
+
+async function postAnnouncement(){
+  const title=document.getElementById('annTitle')?.value?.trim();
+  const body=document.getElementById('annBody')?.value?.trim();
+  const division=document.getElementById('annDivision')?.value||'Vindex';
+  const author=document.getElementById('annAuthor')?.value?.trim()||_U?.name||'LVO Administration';
+  if(!title||!body){toast('Title and body required','err');return;}
+  try{
+    const res=await adminFetch('/announcements',{method:'POST',body:JSON.stringify({title,body,division,author})});
+    if(!res.ok)throw new Error(await res.text());
+    document.getElementById('annTitle').value='';document.getElementById('annBody').value='';
+    toast('Announcement posted','ok');logAct(`Posted announcement: "${title}"`,true);
+    await fetchAnn();await loadAdminAnn();
+  }catch(e){toast('Failed to post: '+e.message,'err');}
+}
+
+async function toggleGlobalPin(id,pin){
+  try{
+    const res=await adminFetch(`/announcements/${id}/pin`,{method:'PUT',body:JSON.stringify({pinned:pin})});
+    if(!res.ok)throw new Error(`${res.status}`);
+    toast(pin?'★ Pinned globally':'Unpinned','ok');
+    logAct(`${pin?'Pinned':'Unpinned'} an announcement`,true);
+    await fetchAnn();await loadAdminAnn();
+  }catch(e){toast('Failed','err');}
+}
+
+async function deleteAnn(id){
+  if(!confirm('Delete this announcement?'))return;
+  try{
+    const res=await adminFetch(`/announcements/${id}`,{method:'DELETE'});
+    if(!res.ok)throw new Error(`${res.status}`);
+    toast('Deleted','ok');logAct('Deleted an announcement',true);
+    await fetchAnn();await loadAdminAnn();
+  }catch(e){toast('Failed','err');}
+}
+
+function setupAnnPreview(){
+  const update=()=>{
+    const title=document.getElementById('annTitle')?.value||'';
+    const body=document.getElementById('annBody')?.value||'';
+    const div=document.getElementById('annDivision')?.value||'Vindex';
+    const author=document.getElementById('annAuthor')?.value||_U?.name||'LVO Administration';
+    const el=document.getElementById('annPreview');if(!el)return;
+    if(!title&&!body){el.innerHTML='<div class="ann-body" style="color:var(--dim)">Fill in the form to preview your announcement.</div>';return;}
+    el.innerHTML=`<div class="ann"><div class="ann-hd"><span class="ann-title">${esc(title)||'Untitled'}</span><span class="ann-div">${esc(div)}</span></div>${body?`<div class="ann-body">${esc(body)}</div>`:''}<div class="ann-ft"><span class="ann-author">${esc(author)}</span><span class="ann-time">· Just now</span></div></div>`;
+  };
+  ['annTitle','annBody','annDivision','annAuthor'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',update);});
+}
+
+/* ── ADMIN: MEMBERS ── */
+async function loadAdminMembers(){
+  const el=document.getElementById('admList');
+  if(!el)return;
+  el.innerHTML='<div class="empty">Loading…</div>';
+  try{
+    const res=await adminFetch('/members');
+    if(!res.ok)throw new Error(`${res.status}`);
+    const list=await res.json();
+    _members=list;
+    setText('admTotal',list.length);
+    renderMemberList(list);
+  }catch(e){el.innerHTML=`<div class="empty" style="color:var(--red-hi)">Error: ${esc(e.message)}</div>`;}
+}
+
+function filterMembers(){
+  const q=document.getElementById('memberSearch')?.value?.toLowerCase()||'';
+  renderMemberList(q?_members.filter(m=>(m.name||'').toLowerCase().includes(q)||(m.email||'').toLowerCase().includes(q)):_members);
+}
+
+function renderMemberList(list){
+  const el=document.getElementById('admList');if(!el)return;
+  const countEl=document.getElementById('memberCount');if(countEl)countEl.textContent=`${list.length} member${list.length!==1?'s':''}`;
+  if(!list.length){el.innerHTML='<div class="empty">No members found.</div>';return;}
+  el.innerHTML=list.map(m=>{
+    const tv=parseInt(m.tier)||4;
+    const uid=m.uid||'';
+    const safeName=esc(m.name||'Unknown');
+    return`<div class="member-row" id="mr-${uid}">
+      <div style="display:flex;align-items:center;gap:.7rem">${avHTML(m.avatar||m.avatar_url,m.name,30)}<div>
+        <div class="member-name">${safeName}</div>
+        <div class="member-email">${esc(m.email||'')} · ${esc(m.role||'member')}</div>
+      </div></div>
+      <select id="ts-${uid}" style="background:var(--bg2);border:.5px solid var(--border);color:var(--gold);font-family:'Cinzel',serif;font-size:.4rem;letter-spacing:.12em;padding:.42rem .65rem;cursor:pointer;outline:none;width:100%" ${uid===_U?.uid?'disabled':''}>
+        <option value="1" ${tv===1?'selected':''}>Tier I</option>
+        <option value="2" ${tv===2?'selected':''}>Tier II</option>
+        <option value="3" ${tv===3?'selected':''}>Tier III</option>
+        <option value="4" ${tv===4?'selected':''}>Tier IV</option>
+      </select>
+      <button class="btn sm" data-uid="${avEsc(uid)}" data-name="${avEsc(m.name||'Unknown')}" onclick="saveTier(this.dataset.uid,this.dataset.name)" ${uid===_U?.uid?'disabled':''}>Save</button>
+      <div class="member-actions">
+        <button class="btn xs ghost" type="button" data-uid="${avEsc(uid)}" onclick="editMember(this.dataset.uid)">Edit</button>
+        <button class="btn xs danger" type="button" data-uid="${avEsc(uid)}" onclick="deleteMember(this.dataset.uid)" ${uid===_U?.uid?'disabled':''}>Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function saveTier(uid,memberName){
+  const sel=document.getElementById('ts-'+uid);if(!sel)return;
+  const newTier=parseInt(sel.value);
+  try{
+    const res=await adminFetch(`/members/${uid}`,{method:'PUT',body:JSON.stringify({tier:newTier})});
+    if(!res.ok)throw new Error(`${res.status}`);
+    const btn=document.querySelector(`#mr-${uid} .btn`);
+    if(btn){btn.textContent='Saved ✓';btn.style.color='var(--green)';setTimeout(()=>{btn.textContent='Save';btn.style.color='';},2200);}
+    toast(`${memberName} → ${TIER_LABELS[newTier]}`,'ok');
+    logAct(`Updated ${memberName}'s tier to ${TIER_LABELS[newTier]}`,true);
+  }catch(e){toast('Failed to save','err');}
+}
+
+/* ── ADMIN: CREATE MEMBER (invite-only, same pattern as Alliance) ── */
+async function createMember(){
+  const firstName=document.getElementById('newMemberFirst')?.value?.trim();
+  const lastName=document.getElementById('newMemberLast')?.value?.trim();
+  const username=document.getElementById('newMemberUsername')?.value?.trim();
+  const email=document.getElementById('newMemberEmail')?.value?.trim();
+  const tier=parseInt(document.getElementById('newMemberTier')?.value)||4;
+  const role=document.getElementById('newMemberRole')?.value||'member';
+  if(!firstName||!lastName||!username||!email){toast('First name, last name, username, and email are required','err');return;}
+  try{
+    const res=await adminFetch('/members',{method:'POST',body:JSON.stringify({firstName,lastName,username,email,tier,role})});
+    if(!res.ok){const d=await res.json();throw new Error(d.error||`HTTP ${res.status}`);}
+    toast(`Account created for ${firstName} ${lastName} — credentials emailed`,'ok');
+    logAct(`Created account: ${firstName} ${lastName}`,true);
+    ['newMemberFirst','newMemberLast','newMemberUsername','newMemberEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    await loadAdminMembers();
+  }catch(e){toast('Failed: '+e.message,'err');}
+}
+
+/* ═════════════════════════════════════════════════════════════
+   ADMIN EDIT / DELETE
+   Worker routes used (all Bearer-authed, admin-only server-side):
+     PATCH  /work-orders/:wo_id     DELETE /work-orders/:wo_id
+     PATCH  /vendors/:id            DELETE /vendors/:id
+     PATCH  /inspections/:id        DELETE /inspections/:id
+     PUT    /announcements/:id      DELETE /announcements/:id
+     PUT    /members/:uid           DELETE /members/:uid
+     GET|POST /deals  (Vindex properties only)   PUT|DELETE /deals/:id
+   ═════════════════════════════════════════════════════════════ */
+const enc=encodeURIComponent;
+const woKey=w=>w.wo_id||w.id;
+const WO_TRADES=['HVAC','Plumbing','Electrical','Roofing','Carpentry','Cosmetic','Landscaping','Appliance','General'];
+
+async function apiSend(method,path,body){
+  const res=await adminFetch(path,{method,body:body===undefined?undefined:JSON.stringify(body)});
+  if(!res.ok){
+    let msg='';try{const d=await res.json();msg=(d&&d.error)||'';}catch(_){}
+    throw new Error(msg||('HTTP '+res.status));
+  }
+  try{return await res.json();}catch(_){return null;}
+}
+
+function actionsHTML(editFn,delFn,id){
+  if(!_U?.isAdmin||id==null)return'';
+  const i=avEsc(id);
+  return`<div class="row-actions"><button class="btn xs" type="button" data-id="${i}" onclick="${editFn}(this.dataset.id)">Edit</button><button class="btn xs danger" type="button" data-id="${i}" onclick="${delFn}(this.dataset.id)">Delete</button></div>`;
+}
+
+function findRec(arr,keyFn,id){
+  const r=arr.find(x=>String(keyFn(x))===String(id));
+  if(!r)toast('Record not found — refresh and try again','err');
+  return r;
+}
+
+/* Generic confirm → DELETE → refresh. Resolves true on success, false if cancelled/failed. */
+async function adminDelete(kind,label,path,onDone){
+  if(!confirm(`Delete ${kind} “${label}”? This can't be undone.`))return false;
+  try{
+    await apiSend('DELETE',path);
+    await onDone();
+    toast(kind.charAt(0).toUpperCase()+kind.slice(1)+' deleted','ok');
+    logAct(`Deleted ${kind}: ${label}`,true);
+    return true;
+  }catch(e){toast('Delete failed: '+e.message,'err');return false;}
+}
+
+/* ── Modal editor ──
+   fields: [{key,label,type:'text|email|date|select|textarea',options,required,full,nullable,num,list}] */
+function closeEditor(){document.getElementById('mdlBack')?.remove();document.removeEventListener('keydown',_mdlKey);}
+function _mdlKey(e){if(e.key==='Escape')closeEditor();}
+
+function openEditor({title,fields,values={},saveLabel='Save Changes',onSave,onDelete}){
+  closeEditor();
+  const body=fields.map(f=>{
+    const id='ef-'+f.key;
+    const v=values[f.key]==null?'':values[f.key];
+    let ctl;
+    if(f.type==='select'){
+      let opts=f.options.map(o=>Array.isArray(o)?o:[o,o]);
+      if(v!==''&&!opts.some(([val])=>String(val)===String(v)))opts=[[v,String(v)],...opts];
+      ctl=`<select class="form-select" id="${id}">${opts.map(([val,lab])=>`<option value="${avEsc(val)}"${String(v)===String(val)?' selected':''}>${esc(lab)}</option>`).join('')}</select>`;
+    }else if(f.type==='textarea'){
+      ctl=`<textarea class="form-textarea" id="${id}" style="min-height:90px">${esc(v)}</textarea>`;
+    }else{
+      ctl=`<input class="form-input" id="${id}" type="${f.type||'text'}" value="${avEsc(v)}"${f.list?` list="${id}-l"`:''}/>`
+        +(f.list?`<datalist id="${id}-l">${f.list.map(x=>`<option value="${avEsc(x)}"></option>`).join('')}</datalist>`:'');
+    }
+    return`<div class="form-group${f.full?' full':''}"><label class="form-label" for="${id}">${esc(f.label)}${f.required?' *':''}</label>${ctl}</div>`;
+  }).join('');
+
+  const back=document.createElement('div');
+  back.className='mdl-back';back.id='mdlBack';
+  back.innerHTML=`<div class="mdl" role="dialog" aria-modal="true">
+    <div class="mdl-hd"><span class="mdl-title">${esc(title)}</span><button class="btn xs ghost" type="button" data-x="close" aria-label="Close">✕</button></div>
+    <div class="mdl-bd">${body}</div>
+    <div class="mdl-ft">
+      <div>${onDelete?'<button class="btn sm danger" type="button" data-x="del">Delete</button>':''}</div>
+      <div class="btn-row"><button class="btn sm ghost" type="button" data-x="close">Cancel</button><button class="btn sm" type="button" data-x="save">${esc(saveLabel)}</button></div>
+    </div></div>`;
+
+  const setBusy=b=>back.querySelectorAll('[data-x]').forEach(x=>x.disabled=b);
+  back.addEventListener('click',async e=>{
+    const act=e.target.closest('[data-x]')?.dataset.x;if(!act)return;
+    if(act==='close'){closeEditor();return;}
+    if(act==='save'){
+      const vals={};
+      for(const f of fields){
+        const el=back.querySelector('#ef-'+f.key);
+        let v=(el.value||'').trim();
+        if(f.required&&!v){toast(f.label+' is required','err');el.focus();return;}
+        if(f.num)v=v===''?null:Number(v);
+        else if(f.nullable&&v==='')v=null;
+        vals[f.key]=v;
+      }
+      setBusy(true);
+      try{await onSave(vals);closeEditor();}
+      catch(err){toast('Failed: '+err.message,'err');setBusy(false);}
+    }
+    if(act==='del'){
+      setBusy(true);
+      const ok=await onDelete();
+      if(ok!==false)closeEditor();else setBusy(false);
+    }
+  });
+  document.body.appendChild(back);
+  document.addEventListener('keydown',_mdlKey);
+  back.querySelector('input,textarea,select')?.focus();
+}
+
+/* ── Work orders ── */
+function refreshOps(){renderWorkOrders();renderVendors();renderInspections();updateOpsStats();renderAdminFieldOps();}
+
+function editWO(id){
+  const w=findRec(_workOrders,woKey,id);if(!w)return;
+  openEditor({
+    title:'Edit '+woKey(w),
+    fields:[
+      {key:'title',label:'Title / Description',full:1,required:1},
+      {key:'property',label:'Property',nullable:1},
+      {key:'type',label:'Trade Type',type:'select',options:[['','—'],...WO_TRADES],nullable:1},
+      {key:'priority',label:'Priority',type:'select',options:[['normal','Normal'],['urgent','Urgent']]},
+      {key:'status',label:'Status',type:'select',options:[['open','Open'],['in-progress','In Progress'],['scheduled','Scheduled'],['completed','Completed']]},
+      {key:'vendor',label:'Assigned Vendor',nullable:1,list:_vendors.map(v=>v.name).filter(Boolean)},
+      {key:'cost',label:'Est. Cost',nullable:1},
+      {key:'notes',label:'Notes',type:'textarea',full:1,nullable:1}
+    ],
+    values:w,
+    onSave:async v=>{
+      await apiSend('PATCH',`/work-orders/${enc(woKey(w))}`,v);
+      await fetchFieldOps();
+      toast(woKey(w)+' updated','ok');logAct(`Edited work order ${woKey(w)}`,true);
+    },
+    onDelete:()=>deleteWO(woKey(w))
+  });
+}
+function deleteWO(id){
+  const w=findRec(_workOrders,woKey,id);if(!w)return Promise.resolve(false);
+  return adminDelete('work order',`${woKey(w)} · ${w.title||'Untitled'}`,`/work-orders/${enc(woKey(w))}`,()=>fetchFieldOps());
+}
+
+/* ── Vendors ── */
+const VENDOR_FIELDS=[
+  {key:'name',label:'Company Name',full:1,required:1},
+  {key:'trade',label:'Trade Specialty',nullable:1},
+  {key:'phone',label:'Phone',nullable:1},
+  {key:'email',label:'Email',type:'email',nullable:1},
+  {key:'rating',label:'Rating',type:'select',num:1,options:[[0,'Unrated'],[1,'1 star'],[2,'2 stars'],[3,'3 stars'],[4,'4 stars'],[5,'5 stars']]},
+  {key:'active',label:'Status',type:'select',num:1,options:[[1,'Active'],[0,'Inactive']]}
+];
+function editVendor(id){
+  const v=findRec(_vendors,x=>x.id,id);if(!v)return;
+  openEditor({
+    title:'Edit '+(v.name||'Vendor'),
+    fields:VENDOR_FIELDS,
+    values:{...v,rating:v.rating||0,active:v.active==0?0:1},
+    onSave:async vals=>{
+      await apiSend('PATCH',`/vendors/${enc(v.id)}`,vals);
+      await fetchFieldOps();
+      toast((vals.name||'Vendor')+' updated','ok');logAct(`Edited vendor: ${vals.name}`,true);
+    },
+    onDelete:()=>deleteVendor(v.id)
+  });
+}
+function deleteVendor(id){
+  const v=findRec(_vendors,x=>x.id,id);if(!v)return Promise.resolve(false);
+  return adminDelete('vendor',v.name||'Vendor',`/vendors/${enc(v.id)}`,()=>fetchFieldOps());
+}
+
+/* ── Inspections ── */
+function editInsp(id){
+  const i=findRec(_inspections,x=>x.id,id);if(!i)return;
+  openEditor({
+    title:'Edit Inspection',
+    fields:[
+      {key:'property',label:'Property',full:1,required:1},
+      {key:'type',label:'Inspection Type'},
+      {key:'date',label:'Date',type:'date',required:1},
+      {key:'result',label:'Result',type:'select',full:1,options:[['upcoming','Upcoming'],['pass','Pass'],['attention','Attention'],['fail','Fail']]}
+    ],
+    values:{...i,date:i.date?String(i.date).slice(0,10):'',result:(i.result||'upcoming').toLowerCase()},
+    onSave:async vals=>{
+      await apiSend('PATCH',`/inspections/${enc(i.id)}`,vals);
+      await fetchFieldOps();
+      toast('Inspection updated','ok');logAct(`Edited inspection: ${vals.property}`,true);
+    },
+    onDelete:()=>deleteInsp(i.id)
+  });
+}
+function deleteInsp(id){
+  const i=findRec(_inspections,x=>x.id,id);if(!i)return Promise.resolve(false);
+  return adminDelete('inspection',i.property||'Inspection',`/inspections/${enc(i.id)}`,()=>fetchFieldOps());
+}
+
+/* ── Announcements ── */
+function editAnn(id){
+  const a=findRec([..._admAnnList,..._ann],x=>x.id,id);if(!a)return;
+  openEditor({
+    title:'Edit Announcement',
+    fields:[
+      {key:'title',label:'Title',full:1,required:1},
+      {key:'body',label:'Body',type:'textarea',full:1,required:1},
+      {key:'division',label:'Division',type:'select',options:[['All','All Divisions'],['Vindex','Vindex']]},
+      {key:'author',label:'Author'}
+    ],
+    values:a,
+    onSave:async v=>{
+      await apiSend('PUT',`/announcements/${enc(a.id)}`,v);
+      toast('Announcement updated','ok');logAct(`Edited announcement: "${v.title}"`,true);
+      await fetchAnn();await loadAdminAnn();
+    },
+    onDelete:()=>adminDelete('announcement',a.title||'Announcement',`/announcements/${enc(a.id)}`,async()=>{await fetchAnn();await loadAdminAnn();})
+  });
+}
+
+/* ── Members ── */
+function editMember(uid){
+  const m=findRec(_members,x=>x.uid,uid);if(!m)return;
+  const self=uid===_U?.uid;
+  const parts=String(m.name||'').trim().split(/\s+/);
+  const base={firstName:m.firstName??parts[0]??'',lastName:m.lastName??parts.slice(1).join(' '),email:m.email||'',role:m.role||'member',tier:parseInt(m.tier)||4};
+  const fields=[
+    {key:'firstName',label:'First Name',required:1},
+    {key:'lastName',label:'Last Name'},
+    {key:'email',label:'Email',type:'email',required:1}
+  ];
+  if(!self)fields.push(
+    {key:'role',label:'Access Role',type:'select',options:[['member','Member'],['admin','Admin']]},
+    {key:'tier',label:'Tier',type:'select',num:1,options:[[1,'Tier I — Principal'],[2,'Tier II — Associate'],[3,'Tier III — Partner'],[4,'Tier IV — Member']]}
+  );
+  openEditor({
+    title:'Edit '+(m.name||'Member'),
+    fields,values:base,
+    onSave:async v=>{
+      const changed={};
+      Object.keys(v).forEach(k=>{if(String(v[k]??'')!==String(base[k]??''))changed[k]=v[k];});
+      if(!Object.keys(changed).length)return;
+      await apiSend('PUT',`/members/${enc(uid)}`,changed);
+      toast((m.name||'Member')+' updated','ok');logAct(`Edited member: ${m.name||uid}`,true);
+      await loadAdminMembers();
+    },
+    onDelete:self?undefined:()=>deleteMember(uid)
+  });
+}
+function deleteMember(uid){
+  const m=findRec(_members,x=>x.uid,uid);if(!m)return Promise.resolve(false);
+  if(uid===_U?.uid){toast("You can't delete your own account",'err');return Promise.resolve(false);}
+  return adminDelete('member',m.name||m.email||'Member',`/members/${enc(uid)}`,loadAdminMembers);
+}
+
+/* ── Properties (admin: all properties) ── */
+const PROP_FIELDS=[
+  {key:'name',label:'Property Name',full:1,required:1},
+  {key:'status',label:'Status',type:'select',options:[['active','Active'],['pending','Pending'],['under contract','Under Contract'],['closed','Closed']]},
+  {key:'position',label:'Position'},
+  {key:'date',label:'Date'},
+  {key:'capital',label:'Value / Capital',full:1},
+  {key:'note',label:'Note',type:'textarea',full:1}
+];
+
+async function refreshMyProps(){
+  try{const props=(await LVOAuth.myDeals()).filter(isVindexProp);_U.props=props;renderProps(props,_U.tier,_U.isAdmin);renderFin(props,_U.tier,_U.isAdmin);}catch(_){}
+}
+
+function dealsFrom(data){
+  if(Array.isArray(data))return data;
+  if(data&&typeof data==='object'){
+    for(const k of ['deals','properties','data','results','items'])if(Array.isArray(data[k]))return data[k];
+    const a=Object.values(data).find(Array.isArray);if(a)return a;
+  }
+  return[];
+}
+let _adminPropsNote='';
+async function addProp(){
+  if(!_members.length){const r=await adminFetch('/members');if(r.ok)_members=await r.json();}
+  if(!_members.length){toast('Could not load members to assign an owner','err');return;}
+  const me=_members.find(m=>(m.email||'').toLowerCase()===(_U?.email||'').toLowerCase())||_members[0];
+  openEditor({
+    title:'Add Property',saveLabel:'Add Property',
+    fields:[{key:'ownerId',label:'Owner',type:'select',full:1,options:_members.map(m=>[m.uid,m.name||m.email||m.uid])},...PROP_FIELDS],
+    values:{ownerId:me.uid,status:'active'},
+    onSave:async v=>{
+      await apiSend('POST',DEALS_PATH,{...v,ownerType:'member',division:'Vindex'});
+      await loadAdminProps();refreshMyProps();
+      toast((v.name||'Property')+' added','ok');logAct(`Added property: ${v.name}`,true);
+    }
+  });
+}
+
+async function loadAdminProps(){
+  const el=document.getElementById('admPropList');if(!el)return;
+  el.innerHTML='<div class="empty" style="padding:1.5rem">Loading…</div>';
+  const res=await adminFetch(DEALS_PATH);
+  if(!res.ok){
+    el.innerHTML=`<div class="empty" style="padding:1.5rem;color:var(--red-hi)">Couldn't load properties (HTTP ${esc(res.status)}).</div>`;
+    return;
+  }
+  _adminProps=dealsFrom(await res.json()).filter(isVindexProp);
+  _adminPropsNote='';
+  renderAdminProps();
+}
+
+function renderAdminProps(){
+  const el=document.getElementById('admPropList');if(!el)return;
+  const q=(document.getElementById('propSearch')?.value||'').toLowerCase();
+  const list=q?_adminProps.filter(d=>[d.name,d.type,d.division,d.status,d.position,d.note].some(x=>String(x||'').toLowerCase().includes(q))):_adminProps;
+  setText('admPropCount',`${list.length} propert${list.length!==1?'ies':'y'}`);
+  const noteHTML=_adminPropsNote?`<div style="padding:.8rem 1.4rem;font-size:.82rem;font-style:italic;color:var(--amber);border-bottom:.5px solid var(--border)">${esc(_adminPropsNote)}</div>`:'';
+  el.innerHTML=noteHTML+(list.length?list.map(d=>propHTML(d,true,1,true)).join(''):`<div class="empty" style="padding:1.5rem">${q?'No properties match.':'No Vindex properties yet. Use + Add Property.'}</div>`);
+}
+
+function editProp(id){
+  const d=findRec(_adminProps,x=>x.id,id);if(!d)return;
+  openEditor({
+    title:'Edit '+(d.name||'Property'),
+    fields:PROP_FIELDS,
+    values:{...d,status:String(d.status||'active').toLowerCase()},
+    onSave:async v=>{
+      await apiSend('PUT',`${DEALS_PATH}/${enc(d.id)}`,v);
+      await loadAdminProps();refreshMyProps();
+      toast((v.name||'Property')+' updated','ok');logAct(`Edited property: ${v.name}`,true);
+    },
+    onDelete:()=>deleteProp(d.id)
+  });
+}
+function deleteProp(id){
+  const d=findRec(_adminProps,x=>x.id,id);if(!d)return Promise.resolve(false);
+  return adminDelete('property',d.name||'Property',`${DEALS_PATH}/${enc(d.id)}`,async()=>{
+    await loadAdminProps();refreshMyProps();
+  });
+}
+
+/* ── INIT ── */
+window.addEventListener('load',async()=>{
+  setLoad('Checking session…');
+  document.getElementById('tbSignOut').addEventListener('click',async()=>{
+    clearInterval(_annTimer);
+    clearInterval(_statusPollTimer);
     await LVOAuth.logout();
-    showGate();
+    window.location.href=MARKETING_SITE;
   });
 
-  (async () => {
-    const user = await LVOAuth.session();
-    user && user.division === 'Vindex' ? showSignedIn(user) : showGate();
-  })();
-})();
-</script>
-
-<script src="https://lvo-cloud.cloud/assets/lvo-status.js" data-division="Vindex" defer></script>
-<script>
-(function(){
-  var btn=document.getElementById('menuBtn'),menu=document.getElementById('siteMenu');
-  if(!btn||!menu)return;
-  function set(open){
-    btn.classList.toggle('open',open);menu.classList.toggle('open',open);
-    btn.setAttribute('aria-expanded',String(open));
-    btn.setAttribute('aria-label',open?'Close menu':'Open menu');
-    document.body.style.overflow=open?'hidden':'';
-    if(open){var a=menu.querySelector('a');if(a)a.focus({preventScroll:true});}
+  const token=LVOAuth.getToken();
+  if(!token){
+    setLoad('Redirecting…');
+    setTimeout(()=>{window.location.href=LOGIN_URL;},600);
+    return;
   }
-  btn.addEventListener('click',function(){set(!menu.classList.contains('open'));});
-  menu.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
-  window.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open')){set(false);btn.focus();}});
-  window.addEventListener('resize',function(){if(window.innerWidth>768&&menu.classList.contains('open'))set(false);});
-})();
+
+  setLoad('Authenticating…');
+  const user=await LVOAuth.session();
+
+  if(!user){
+    setLoad('Session expired. Redirecting…');
+    LVOAuth.clearToken();
+    setTimeout(()=>{window.location.href=MARKETING_SITE;},800);
+    return;
+  }
+
+  if(user.division!==THIS_DIVISION){
+    // This account belongs to a different division — this dashboard isn't theirs.
+    setLoad(`This account is registered under ${user.division}, not ${THIS_DIVISION}. Redirecting…`);
+    setTimeout(()=>{window.location.href=MARKETING_SITE;},1600);
+    return;
+  }
+
+  setLoad('Checking system status…');
+  const isDown = await checkSystemStatus();
+  if(isDown) return; // already redirected to down.html
+
+  setLoad('Loading your profile…');
+  await populateDash(user);
+
+  document.getElementById('topbar').style.display='flex';
+  document.getElementById('shell').style.display='flex';
+  const ls=document.getElementById('loadScreen');if(ls){ls.classList.add('out');setTimeout(()=>ls.remove(),700);}
+
+  await fetchAnn();await fetchFieldOps();
+  startCountdown();
+  startStatusPolling();
+  logAct(`Signed in · ${_U.name}`);
+  setSbStatus(true,'Connected · Live');
+});
+
+function renderPulse(){
+  const act=_workOrders.filter(w=>w.status!=='completed');
+  setText('pvOpen',String(act.length));
+  setText('pvUrgent',String(act.filter(w=>w.priority==='urgent').length));
+  const ages=act.map(w=>w.created_at?(Date.now()-new Date(w.created_at))/864e5:null).filter(x=>x!==null);
+  setText('pvAge',ages.length?String(Math.round(ages.reduce((a,b)=>a+b,0)/ages.length)):'0');
+  setText('pvInsp',document.getElementById('opsNextInsp')?.textContent||'None');
+  const by={};act.forEach(w=>{const k=w.property||'Unassigned';(by[k]=by[k]||{n:0,u:0}).n++;if(w.priority==='urgent')by[k].u++});
+  const rows=Object.entries(by).sort((a,b)=>b[1].n-a[1].n).slice(0,8),max=Math.max(1,...rows.map(r=>r[1].n));
+  const el=document.getElementById('propHealth');if(!el)return;
+  el.innerHTML=rows.length?rows.map(([k,v])=>`<div class="ph-bar"><div class="ph-bar-name">${esc(k)}</div><div class="ph-bar-track"><div class="ph-bar-fill${v.u?' warn':''}" style="width:${v.n/max*100}%"></div></div><div class="ph-bar-n">${v.n} open${v.u?' · '+v.u+' urgent':''}</div></div>`).join(''):'<div class="empty">All properties clear. No open work.</div>';
+}
+const _uos=updateOpsStats;updateOpsStats=function(){_uos();try{renderPulse()}catch(e){}};
+
+/* ── AVATARS ── */
+function avInit(n){return (String(n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('')||'?').toUpperCase()}
+function avEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function avHTML(url,name,px){px=px||22;const st=`width:${px}px;height:${px}px`;
+  return url?`<img class="av" style="${st}" src="${avEsc(url)}" alt="" onerror="this.outerHTML='<span class=&quot;av av-i&quot; style=&quot;${st}&quot;>${avEsc(avInit(name))}</span>'">`
+  :`<span class="av av-i" style="${st};font-size:${Math.round(px*.4)}px">${avEsc(avInit(name))}</span>`}
+function syncAvatars(url,name){
+  [['tbAvatarSlot',26],['acAvatarSlot',30],['userAvatarSlot',26]].forEach(([id,px])=>{const el=document.getElementById(id);if(el)el.innerHTML=avHTML(url,name,px)});
+}
 </script>
+<script src="https://lvo-cloud.cloud/assets/lvo-status.js" data-division="Vindex" defer></script>
 </body>
 </html>
